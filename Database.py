@@ -13,7 +13,7 @@ def connect_to_database():
     except Exception as e:
         print(f"Exception occured whilst connecting to MongoDB: {e}")
 
-def get_user_by_card(card_id:str):
+def get_user_by_card(card_id:int):
     if collection is None: return False
-    user = collection.find_one({"card_id": card_id}, {})
+    user = collection.find_one({"card_id": str(card_id)})
     return user
