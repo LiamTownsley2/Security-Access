@@ -2,12 +2,12 @@ from mfrc522 import SimpleMFRC522
 from GPIO_Pin import GPIO_Pin
 from Camera import Camera
 import Util
+from Database import get_user_by_card
 
-def validate_key(id, text):
-    filtered_text = Util.clean_text(text)
-    is_valid = filtered_text == "secret"
-    print(f"*{'VALID' if is_valid else 'INVALID'} TAG READ* | ID: {id} | Text: {filtered_text}")
-    return is_valid
+def validate_key(user, text):
+    if not user: return False
+    if not text == "secret": return False
+    return True
 
 class RFID_Reader:
     def __init__(self):
@@ -16,11 +16,15 @@ class RFID_Reader:
     def read_key(self):
         print("Awaiting Key Presentation...")
         id, text = self.reader.read()
-        is_valid = validate_key(id, text)
-        camera = Camera()
-
+        filtered_text = Util.clean_text(text)
+        
+        user = get_user_by_card(id)
+        is_valid = validate_key(user, filtered_text)
+        print(f"*{'VALID' if is_valid else 'INVALID'} TAG READ* | ID: {id} | Text: {filtered_text}")
+        print(user)
         if is_valid:
             green_led = GPIO_Pin(12) # The Green LED represents unlocking the door.
             green_led.enable(3)
         else:
+            camera = Camera()
             camera.start_recording(id, 5)
