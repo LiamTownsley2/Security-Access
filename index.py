@@ -84,8 +84,8 @@ def main_menu():
         try:
             menu[int(selection) - 1][1]() # Execute Menu function
         except Exception as e:
-            print(f"Error in selection: {e}\n")
-            
+            # print(f"Error in selection: {e.with_traceback()}\n")
+            pass
 if __name__ == "__main__":
     try:
         while True:
