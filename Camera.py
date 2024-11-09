@@ -1,4 +1,4 @@
-import picamera
+import picamera # type: ignore
 from time import sleep
 
 camera = picamera.PiCamera()

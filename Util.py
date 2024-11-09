@@ -1,4 +1,4 @@
-from RPi.GPIO import cleanup, setwarnings, setmode, BCM
+from RPi.GPIO import cleanup, setwarnings, setmode, BCM # type: ignore
 import re
 
 def clean_text(text):
