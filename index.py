@@ -23,9 +23,9 @@ def start_reader():
             is_valid = validate_key(user, text)
             print(f"*{'VALID' if is_valid else 'INVALID'} TAG READ* | ID: {id} | Text: {text}")
             print(f"\t{user}")
+            DB.register_entry(str(id), user['_id'] or None)
 
             if is_valid:
-                DB.register_entry(user['_id'], str(id))
                 green_led = GPIO_Pin(12) # The Green LED represents unlocking the door.
                 green_led.enable(3)
             else:
@@ -75,5 +75,7 @@ if __name__ == "__main__":
     try:
         while True:
             main_menu()
+    except KeyboardInterrupt:
+        print("Goodbye.")
     finally:
         Util.cleanup_gpio()

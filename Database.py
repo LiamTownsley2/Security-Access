@@ -26,11 +26,14 @@ def register_card_to_user(_id:ObjectId, card_id:str):
     result = users_col.replace_one({ "_id": _id }, user)
     return result
 
-def register_entry(_id:ObjectId, tag_id:str):
-    user = get_user(_id)
-    user['last_scanned'] = datetime.now()
-    users_col.replace_one({ "_id": _id }, user)
+def register_entry(tag_id:str, _id:ObjectId|None):
     access_log_col.insert_one({ "tag_id": tag_id, "user_id": _id, "time": datetime.now() })
+    if _id:
+        user = get_user(_id)
+        if user:
+            user['last_scanned'] = datetime.now()
+            users_col.replace_one({ "_id": _id }, user)
+
 def get_user(_id:ObjectId):
     user = users_col.find_one({ "_id": _id })
     return user
