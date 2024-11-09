@@ -38,8 +38,8 @@ def add_user():
     try:
         employee_name = input("What is this employee's FULL LEGAL name?\n> ")
         user = DB.register_user(employee_name)
-        register_keycard = input("Would you like to register a keycard at this time? (Y/n)\n> ")
-        if register_keycard == "" or register_keycard.lower() == "y":
+        select_key_registration = input("Would you like to register a keycard at this time? (Y/n)\n> ")
+        if select_key_registration == "" or select_key_registration.lower() == "y":
             register_keycard(user.inserted_id)
     except KeyboardInterrupt:
         print("\n\nReturning to Main Menu.\n\n")
