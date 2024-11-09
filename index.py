@@ -61,7 +61,7 @@ def register_keycard(employee_id = None):
         id, _ = rfid_reader.read_key()
         users_holding_card = DB.get_users_by_card(str(id))
         if len(users_holding_card) > 0:
-            return print("This card is already registered! Please present another.")
+            yield print("This card is already registered! Please present another.")
         DB.register_card_to_user(ObjectId(employee_id), str(id))
         completed = True
         break
