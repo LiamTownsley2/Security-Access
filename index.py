@@ -25,7 +25,7 @@ def start_reader():
             print(f"\t{user}")
 
             if is_valid:
-                DB.register_entry(user['_id'])
+                DB.register_entry(user['_id'], str(id))
                 green_led = GPIO_Pin(12) # The Green LED represents unlocking the door.
                 green_led.enable(3)
             else:
