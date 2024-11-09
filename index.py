@@ -55,17 +55,17 @@ def remove_user():
 
 def register_keycard(employee_id = None):
     completed = False
-    while not completed:
-        if employee_id is None:
+    if employee_id is None:
             employee_id = input("What is the employee's ID?\n> ")
+            
+    while not completed:
         id, _ = rfid_reader.read_key()
         users_holding_card = DB.get_users_by_card(str(id))
         if len(users_holding_card) > 0:
             yield print("This card is already registered! Please present another.")
         DB.register_card_to_user(ObjectId(employee_id), str(id))
         completed = True
-        break
-    print("Card Registration Successful!")
+        return print("Card Registration Successful!")
 
 def not_implemented():
     raise NotImplementedError
