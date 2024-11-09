@@ -20,7 +20,7 @@ def register_user(name:str):
 
 def register_card_to_user(_id:ObjectId, card_id:str):
     user = get_user(_id)
-    user.card_id = card_id
+    user['card_id'] = card_id
     result = collection.replace_one({ "_id": _id }, user)
     return result
 
