@@ -21,7 +21,7 @@ class RFID_Reader:
         user = get_user_by_card(id)
         is_valid = validate_key(user, filtered_text)
         print(f"*{'VALID' if is_valid else 'INVALID'} TAG READ* | ID: {id} | Text: {filtered_text}")
-        print(user)
+        print(f"\t{user}")
         if is_valid:
             green_led = GPIO_Pin(12) # The Green LED represents unlocking the door.
             green_led.enable(3)
