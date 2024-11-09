@@ -6,7 +6,7 @@ collection = None
 
 def connect_to_database():
     try:
-        client = pymongo.MongoClient("mongodb://localhost:27017/")
+        client = pymongo.MongoClient("mongodb://2.tcp.eu.ngrok.io:13446/")
         database = client["cmp408"]
         collection = database["users"]
     except Exception as e:
