@@ -3,7 +3,7 @@ from bson.objectid import ObjectId
 from datetime import datetime
 client = None
 database = None
-users_col, access_log_col = None
+users_col, access_log_col = None, None
 
 def connect_to_database():
     global client, database, users_col, access_log_col
