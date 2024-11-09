@@ -11,9 +11,9 @@ def start_reader():
         rfid_reader = RFID_Reader()
         while True:
             rfid_reader.read_key()
-    finally:
-        Util.cleanup_gpio()
-
+    except KeyboardInterrupt:
+        print("Returning to Main Menu.")
+        
 def not_implemented():
     raise NotImplementedError
 
@@ -35,5 +35,8 @@ def main_menu():
         except Exception as e:
             print(f"Error in selection: {e}")
 if __name__ == "__main__":
-    while True:
-        main_menu()
+    try:
+        while True:
+            main_menu()
+    finally:
+        Util.cleanup_gpio()
