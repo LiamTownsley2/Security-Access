@@ -1,19 +1,54 @@
 #!/usr/bin/env python
 import Util
 from RFID_Reader import RFID_Reader
-from Database import connect_to_database
+import Database as DB
+from GPIO_Pin import GPIO_Pin
+from Camera import Camera
+from bson.objectid import ObjectId
 
 Util.initialise_gpio_pins()
-connect_to_database()
+DB.connect_to_database()
+rfid_reader = RFID_Reader()
+
+def validate_key(user, text):
+    if not user: return False
+    if not text == "secret": return False
+    return True
 
 def start_reader():
     try:
-        rfid_reader = RFID_Reader()
         while True:
-            rfid_reader.read_key()
+            id, text = rfid_reader.read_key()
+            user = DB.get_user_by_card(id)
+            is_valid = validate_key(user, text)
+            print(f"*{'VALID' if is_valid else 'INVALID'} TAG READ* | ID: {id} | Text: {text}")
+            print(f"\t{user}")
+
+            if is_valid:
+                green_led = GPIO_Pin(12) # The Green LED represents unlocking the door.
+                green_led.enable(3)
+            else:
+                camera = Camera()
+                camera.start_recording(id, 5)
     except KeyboardInterrupt:
         print("\n\nReturning to Main Menu.\n\n")
-        
+
+def add_user():
+    try:
+        employee_name = input("What is this employee's FULL LEGAL name?\n> ")
+        user = DB.register_user(employee_name)
+        register_keycard = input("Would you like to register a keycard at this time? (Y/n)\n> ")
+        if register_keycard == "" or register_keycard.lower() == "y":
+            register_keycard(user.inserted_id)
+    except KeyboardInterrupt:
+        print("\n\nReturning to Main Menu.\n\n")
+
+def register_keycard():
+    employee_id = input("What is the employee's ID/\n> ")
+    id, _ = rfid_reader.read_key()
+    DB.register_card_to_user(ObjectId(employee_id), str(id))
+    print("Card Registration Successful!")
+
 def not_implemented():
     raise NotImplementedError
 
@@ -21,7 +56,7 @@ menu = [
     ("Toggle RFID Reader", start_reader),
     ("Add an Employee", not_implemented),
     ("Remove an Employee", not_implemented),
-    ("Register a Keycard", not_implemented),
+    ("Register a Keycard", register_keycard),
 ]
 
 def main_menu():
@@ -34,6 +69,7 @@ def main_menu():
             menu[int(selection) - 1][1]() # Execute Menu function
         except Exception as e:
             print(f"Error in selection: {e}\n")
+            
 if __name__ == "__main__":
     try:
         while True:
