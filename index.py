@@ -12,7 +12,7 @@ def start_reader():
         while True:
             rfid_reader.read_key()
     except KeyboardInterrupt:
-        print("Returning to Main Menu.")
+        print("\n\nReturning to Main Menu.\n\n")
         
 def not_implemented():
     raise NotImplementedError
