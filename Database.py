@@ -49,5 +49,5 @@ def get_user_by_card(card_id:int):
 
 def get_users_by_card(card_id:int):
     if users_col is None: return False
-    users = users_col.find({"card_id": str(card_id)})
+    users = list(users_col.find({"card_id": str(card_id)}))
     return users
