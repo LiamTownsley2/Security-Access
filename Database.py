@@ -1,6 +1,8 @@
 import pymongo
 from bson.objectid import ObjectId
 from datetime import datetime
+from typing import Optional
+
 client = None
 database = None
 users_col, access_log_col = None, None
@@ -26,7 +28,7 @@ def register_card_to_user(_id:ObjectId, card_id:str):
     result = users_col.replace_one({ "_id": _id }, user)
     return result
 
-def register_entry(tag_id:str, _id:ObjectId|None):
+def register_entry(tag_id:str, _id:Optional[ObjectId]):
     access_log_col.insert_one({ "tag_id": tag_id, "user_id": _id, "time": datetime.now() })
     if _id:
         user = get_user(_id)
