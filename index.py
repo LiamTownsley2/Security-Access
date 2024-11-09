@@ -60,7 +60,7 @@ def register_keycard(employee_id = None):
     id, _ = rfid_reader.read_key()
     users_holding_card = DB.get_users_by_card(str(id))
     if len(users_holding_card) > 0:
-        return print("This card is already registered!")
+        DB.remove_all_links_to_card(id)
     
     DB.register_card_to_user(ObjectId(employee_id), str(id))
     return print("Card Registration Successful!")

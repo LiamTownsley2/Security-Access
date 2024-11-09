@@ -51,3 +51,10 @@ def get_users_by_card(card_id:int):
     if users_col is None: return False
     users = list(users_col.find({"card_id": str(card_id)}))
     return users
+
+def remove_all_links_to_card(card_id:int):
+    if users_col is None: return False
+    users = get_users_by_card(card_id)
+    for user in users:
+        user['card_id'] = None
+        users_col.replace_one({ "_id": user._id }, user)
