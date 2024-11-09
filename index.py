@@ -33,7 +33,7 @@ def main_menu():
         try:
             menu[int(selection) - 1][1]() # Execute Menu function
         except Exception as e:
-            print(f"Error in selection: {e}")
+            print(f"Error in selection: {e}\n")
 if __name__ == "__main__":
     try:
         while True:
