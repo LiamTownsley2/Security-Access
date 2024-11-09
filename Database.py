@@ -14,7 +14,6 @@ def connect_to_database():
         print(f"Exception occured whilst connecting to MongoDB: {e}")
 
 def get_user_by_card(card_id:str):
-    if not collection:
-        return False
+    if collection is None: return False
     user = collection.find_one({"card_id": card_id}, {})
     return user
