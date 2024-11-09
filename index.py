@@ -17,12 +17,12 @@ def start_reader():
 def not_implemented():
     raise NotImplemented
 
-menu = {
+menu = [
     ("Toggle RFID Reader", start_reader),
     ("Add an Employee", not_implemented),
     ("Remove an Employee", not_implemented),
     ("Register a Keycard", not_implemented),
-}
+]
 
 def main_menu():
         print("Welcome to the RFID App! Please select from the following options:")
