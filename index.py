@@ -1,10 +1,11 @@
 #!/usr/bin/env python
 import Util
-from RFID_Reader import RFID_Reader
+from Classes.RFID_Reader import RFID_Reader
 import Database as DB
-from GPIO_Pin import GPIO_Pin
-from Camera import Camera
+from Classes.GPIO_Pin import GPIO_Pin
+from Classes.Camera import Camera
 from bson.objectid import ObjectId
+from Encryptor import generate_master_password
 
 Util.initialise_gpio_pins()
 DB.connect_to_database()
@@ -38,7 +39,8 @@ def start_reader():
 def add_user():
     try:
         employee_name = input("What is this employee's FULL LEGAL name?\n> ")
-        user = DB.register_user(employee_name)
+        master_password = generate_master_password()
+        user = DB.register_user(employee_name, generate_master_password())
         select_key_registration = input("Would you like to register a keycard at this time? (Y/n)\n> ")
         if select_key_registration == "" or "y" in select_key_registration.lower():
             register_keycard(user.inserted_id)

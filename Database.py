@@ -18,8 +18,8 @@ def connect_to_database():
     except Exception as e:
         print(f"Exception occured whilst connecting to MongoDB: {e}")
 
-def register_user(name:str):
-    user = users_col.insert_one({ "name": name, "card_id": None })
+def register_user(name:str, master_password:str):
+    user = users_col.insert_one({ "name": name, "password": master_password, "card_id": None })
     return user
 
 def delete_user(_id:ObjectId):
