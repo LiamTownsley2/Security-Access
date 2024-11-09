@@ -22,6 +22,10 @@ def register_user(name:str):
     user = users_col.insert_one({ "name": name, "card_id": None })
     return user
 
+def delete_user(_id:ObjectId):
+    result =users_col.delete_one({ "_id": _id })
+    return result.acknowledged and result.deleted_count > 0
+
 def register_card_to_user(_id:ObjectId, card_id:str):
     user = get_user(_id)
     user['card_id'] = card_id

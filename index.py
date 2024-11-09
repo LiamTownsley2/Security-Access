@@ -44,8 +44,17 @@ def add_user():
     except KeyboardInterrupt:
         print("\n\nReturning to Main Menu.\n\n")
 
+def remove_user():
+    try:
+        employee_id = input("What is the employee's ID?\n> ")
+        DB.delete_user(ObjectId(employee_id))
+    except KeyboardInterrupt:
+        print("\n\nReturning to Main Menu.\n\n")
+    except Exception as e:
+        print(f"\nThere was an error whilst removing this employee!\n{e}\n")
+
 def register_keycard():
-    employee_id = input("What is the employee's ID/\n> ")
+    employee_id = input("What is the employee's ID?\n> ")
     id, _ = rfid_reader.read_key()
     DB.register_card_to_user(ObjectId(employee_id), str(id))
     print("Card Registration Successful!")
@@ -55,8 +64,8 @@ def not_implemented():
 
 menu = [
     ("Toggle RFID Reader", start_reader),
-    ("Add an Employee", not_implemented),
-    ("Remove an Employee", not_implemented),
+    ("Add an Employee", add_user),
+    ("Remove an Employee", remove_user),
     ("Register a Keycard", register_keycard),
 ]
 
