@@ -24,9 +24,10 @@ def register_card_to_user(_id:ObjectId, card_id:str):
     result = collection.replace_one({ "_id": _id }, user)
     return result
 
-def register_entry(user:any):
+def register_entry(_id:ObjectId):
+    user = get_user(_id)
     user['last_scanned'] = datetime.now()
-    collection.replace_one({"_id": user._id}, user)
+    collection.replace_one({ "_id": _id }, user)
 
 def get_user(_id:ObjectId):
     user = collection.find_one({ "_id": _id })
