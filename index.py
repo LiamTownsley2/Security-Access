@@ -15,7 +15,7 @@ def start_reader():
         Util.cleanup_gpio()
 
 def not_implemented():
-    raise NotImplemented
+    raise NotImplementedError
 
 menu = [
     ("Toggle RFID Reader", start_reader),
