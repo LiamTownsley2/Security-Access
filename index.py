@@ -7,14 +7,17 @@ import Util
 rfid_reader = SimpleMFRC522()
 Util.initialise_gpio_pins()
 
+def validate_key(id, text):
+    filtered_text = Util.clean_text(text)
+    is_valid = filtered_text == "secret"
+    print(f"*{'VALID' if is_valid else 'INVALID'} TAG READ* | ID: {id} | Text: {filtered_text}")
+    return is_valid
+
 def start_reader():
     try:
         id, text = rfid_reader.read()
+        is_valid = validate_key(id, text)
         camera = Camera()
-        filtered_text = Util.clean_text(text)
-        is_valid = filtered_text == "secret"
-        
-        print(f"*{'VALID' if is_valid else 'INVALID'} TAG READ* | ID: {id} | Text: {filtered_text}")
         
         if is_valid:
             green_led = GPIO_Pin(12) # The Green LED represents unlocking the door.
