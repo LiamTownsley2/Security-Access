@@ -57,4 +57,4 @@ def remove_all_links_to_card(card_id:int):
     users = get_users_by_card(card_id)
     for user in users:
         user['card_id'] = None
-        users_col.replace_one({ "_id": user._id }, user)
+        users_col.replace_one({ "_id": user['_id'] }, user)
