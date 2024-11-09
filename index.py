@@ -40,7 +40,7 @@ def add_user():
         user = DB.register_user(employee_name)
         select_key_registration = input("Would you like to register a keycard at this time? (Y/n)\n> ")
         if select_key_registration == "" or select_key_registration.lower() == "y":
-            register_keycard(user.inserted_id)
+            register_keycard()
     except KeyboardInterrupt:
         print("\n\nReturning to Main Menu.\n\n")
 
