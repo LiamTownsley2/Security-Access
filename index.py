@@ -54,10 +54,17 @@ def remove_user():
         print(f"\nThere was an error whilst removing this employee!\n{e}\n")
 
 def register_keycard(employee_id = None):
-    if employee_id is None:
-        employee_id = input("What is the employee's ID?\n> ")
-    id, _ = rfid_reader.read_key()
-    DB.register_card_to_user(ObjectId(employee_id), str(id))
+    completed = False
+    while not completed:
+        if employee_id is None:
+            employee_id = input("What is the employee's ID?\n> ")
+        id, _ = rfid_reader.read_key()
+        users_holding_card = DB.get_users_by_card(str(id))
+        if len(users_holding_card) > 0:
+            return print("This card is already registered! Please present another.")
+        DB.register_card_to_user(ObjectId(employee_id), str(id))
+        completed = True
+        break
     print("Card Registration Successful!")
 
 def not_implemented():
