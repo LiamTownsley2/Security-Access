@@ -40,7 +40,7 @@ def add_user():
         user = DB.register_user(employee_name)
         select_key_registration = input("Would you like to register a keycard at this time? (Y/n)\n> ")
         if select_key_registration == "" or select_key_registration.lower() == "y":
-            register_keycard()
+            register_keycard(user.inserted_id)
     except KeyboardInterrupt:
         print("\n\nReturning to Main Menu.\n\n")
 
@@ -53,8 +53,9 @@ def remove_user():
     except Exception as e:
         print(f"\nThere was an error whilst removing this employee!\n{e}\n")
 
-def register_keycard():
-    employee_id = input("What is the employee's ID?\n> ")
+def register_keycard(employee_id = None):
+    if employee_id is None:
+        employee_id = input("What is the employee's ID?\n> ")
     id, _ = rfid_reader.read_key()
     DB.register_card_to_user(ObjectId(employee_id), str(id))
     print("Card Registration Successful!")
