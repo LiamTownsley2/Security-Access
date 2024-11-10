@@ -68,6 +68,7 @@ def register_keycard(employee_id = None):
 
     id, _ = rfid_reader.read_key()
     users_holding_card = DB.get_users_by_card(str(id))
+    print(f"users_holding_card: {users_holding_card}")
     if len(users_holding_card) > 0:
         DB.remove_all_links_to_card(id)
     
