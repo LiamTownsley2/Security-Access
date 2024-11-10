@@ -24,10 +24,12 @@ def start_reader():
             is_valid = validate_key(user, text)
             print(f"*{'VALID' if is_valid else 'INVALID'} TAG READ* | ID: {id} | Text: {text}")
             print(f"\t{user}")
-            if user and user['_id']:
-                DB.register_entry(str(id), user['_id'])
-
             if is_valid:
+                DB.register_entry(str(id), user['_id'])
+                
+                entries = DB.get_entries_count(user['_id'])
+                rfid_reader.write_key(entries)
+                
                 green_led = GPIO_Pin(12) # The Green LED represents unlocking the door.
                 green_led.enable(3)
             else:
@@ -57,9 +59,14 @@ def remove_user():
         print(f"\nThere was an error whilst removing this employee!\n{e}\n")
 
 def register_keycard(employee_id = None):
-    if employee_id is None:
-            employee_id = input("What is the employee's ID?\n> ")
-    
+    while employee_id is None:
+        _employee_id = input("What is the employee's ID?\n> ")
+        user = DB.get_user(ObjectId(_employee_id))
+        if user:
+            employee_id = _employee_id
+        else:
+            print("This user does not exist!\n")
+
     id, _ = rfid_reader.read_key()
     users_holding_card = DB.get_users_by_card(str(id))
     if len(users_holding_card) > 0:

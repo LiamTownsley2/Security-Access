@@ -1,7 +1,29 @@
-import os
-import base64
+from cryptography.hazmat.primitives import serialization, hashes
+from cryptography.hazmat.primitives.asymmetric import padding
 
-def generate_master_password():
-    random = os.urandom(24)
-    b64_string = base64.b64encode(random).decode("utf-8")
-    return b64_string[:32]
+with open("private.pem", "rb") as key:
+    private_key = serialization.load_pem_private_key(
+        key.read(),
+        password=None,
+    )
+    public_key = private_key.public_key()
+
+def encrypt_message(message:str):
+    return public_key.encrypt(
+        message,
+        padding.OAEP(
+            mgf=padding.MGF1(algorithm=hashes.SHA256()),
+            algorithm=hashes.SHA256(),
+            label=None
+        )
+    )
+
+def decrypt_message(message:str):
+    return private_key.decrypt(
+        message,
+        padding.OAEP(
+            mgf=padding.MGF1(algorithm=hashes.SHA256()),
+            algorithm=hashes.SHA256(),
+            label=None
+        )
+    )
