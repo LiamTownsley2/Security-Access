@@ -1,6 +1,10 @@
+import sys
+sys.path.append("..")
+
 from mfrc522 import SimpleMFRC522
 import Util
-from ..Encryptor import decrypt_message, encrypt_message
+from Encryptor import decrypt_message, encrypt_message
+
 class RFID_Reader:
     def __init__(self):
         self.reader = SimpleMFRC522()
