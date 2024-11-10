@@ -17,5 +17,5 @@ class RFID_Reader:
     
     def write_key(self, entries:int):
         print("Awaiting Key Presentation...")
-        encrypted_entries = encrypt_message(entries)
+        encrypted_entries = encrypt_message(str(entries))
         self.reader.write(encrypted_entries)
