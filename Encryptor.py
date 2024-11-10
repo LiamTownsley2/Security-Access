@@ -10,7 +10,7 @@ with open("private.pem", "rb") as key:
 
 def encrypt_message(message:str):
     return public_key.encrypt(
-        message,
+        str.encode(message),
         padding.OAEP(
             mgf=padding.MGF1(algorithm=hashes.SHA256()),
             algorithm=hashes.SHA256(),
@@ -20,7 +20,7 @@ def encrypt_message(message:str):
 
 def decrypt_message(message:str):
     return private_key.decrypt(
-        message,
+        str.encode(message),
         padding.OAEP(
             mgf=padding.MGF1(algorithm=hashes.SHA256()),
             algorithm=hashes.SHA256(),
