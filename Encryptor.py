@@ -20,7 +20,7 @@ def encrypt_message(message:str):
 
 def decrypt_message(message:str):
     return private_key.decrypt(
-        str.encode(message),
+        message,
         padding.OAEP(
             mgf=padding.MGF1(algorithm=hashes.SHA256()),
             algorithm=hashes.SHA256(),
