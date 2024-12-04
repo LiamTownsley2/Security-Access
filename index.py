@@ -4,7 +4,7 @@ load_dotenv()
 
 import Util
 from Classes.RFID_Reader import RFID_Reader
-from .AWS import DynamoDB, S3
+from AWS import DynamoDB, S3
 from Classes.GPIO_Pin import GPIO_Pin
 from Classes.Camera import Camera
 from bson.objectid import ObjectId

@@ -1,3 +1,4 @@
+python3-venv
 boto3
 pymongo
 python-dotenv
