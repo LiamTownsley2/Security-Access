@@ -32,6 +32,7 @@ def delete_user(user_id: str):
 
 def register_card_to_user(user_id: str, card_id: str):
     user = get_user(user_id)
+    print(f"register_card_to_user:get_user ->> {user}")
     if user:
         user['CardID'] = card_id
         users_table.put_item(Item=user)
