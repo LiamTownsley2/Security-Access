@@ -192,8 +192,8 @@ def main_menu(stdscr):
     
     curses.start_color()
     curses.init_pair(1, curses.COLOR_RED, curses.COLOR_BLACK)
-    curses.init_pair(3, curses.COLOR_CYAN, curses.COLOR_BLACK)
     curses.init_pair(2, curses.COLOR_GREEN, curses.COLOR_BLACK)
+    curses.init_pair(3, curses.COLOR_CYAN, curses.COLOR_BLACK)
     
     while True:
         stdscr.clear()
@@ -210,7 +210,7 @@ def main_menu(stdscr):
         if rfid_enabled:
             stdscr.addstr(9, 25, f"Working and Operational", curses.color_pair(2))
         else:
-            stdscr.addstr(9, 25, f"Disabled", curses.color_pair(2))
+            stdscr.addstr(9, 25, f"Disabled", curses.color_pair(1))
         
         stdscr.addstr(10, 0, "Web Interface:                                   ", curses.color_pair(1) | curses.A_BOLD)
         if web_enabled:
