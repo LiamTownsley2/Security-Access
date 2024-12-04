@@ -145,6 +145,9 @@ def register_keycard(stdscr, employee_id=None):
         
         try:
             user = DynamoDB.get_user(employee_id)
+            stdscr.addstr(4, 0, "Awaiting Key presentation..........")
+            stdscr.refresh()
+
             id, _ = rfid_reader.read_key()
             users_holding_card = DynamoDB.get_users_by_card(str(id))
             if len(users_holding_card) > 0:
