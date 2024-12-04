@@ -24,6 +24,8 @@ thread_file_handler = logging.FileHandler(thread_logger_file_name)
 thread_file_handler.setFormatter(logging.Formatter("%(asctime)s - %(levelname)s - %(message)s"))
 thread_logger.addHandler(thread_file_handler)
 
+log_queue = Queue()
+
 def validate_key(user, text):
     if not user: return False
     if not text == "secret": return False
@@ -166,8 +168,8 @@ def view_rfid_logs(stdscr, log_queue):
 
         stdscr.clear()
         stdscr.addstr(0, 0, "Log Viewer (Press 'q' to quit):")
-        log_lines = []
         
+        log_lines = []
         while True:
             try:
                 key = stdscr.getkey()
@@ -194,7 +196,6 @@ def main_menu(stdscr):
     
     rfid_enabled = False
     web_enabled = False
-    log_queue = Queue()
 
     log_thread = threading.Thread(target=watch_log_file, args=(thread_logger_file_name, log_queue), daemon=True)
     log_thread.start()
