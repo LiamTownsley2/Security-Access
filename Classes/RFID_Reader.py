@@ -10,7 +10,7 @@ class RFID_Reader:
         self.logger = logger
         
     def read_key(self):
-        self.logger.info("Awaiting Key Presentation...")
+        self.logger.info("RFID Reader is awaiting Key Presentation")
         id, text = self.reader.read()
         filtered_text = Util.clean_text(text)        
         return id, filtered_text

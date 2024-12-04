@@ -57,6 +57,11 @@ def start_reader():
     except Exception as e:
         thread_logger.error(e)
 
+def send_simple_notification(stdscr, message:str, timeout:int, row = 0):
+    stdscr.clear()
+    stdscr.addstr(row, 0, message)
+    stdscr.refresh()
+    curses.napms(timeout)
 
 def add_user(stdscr):
     while True:
@@ -68,10 +73,7 @@ def add_user(stdscr):
         employee_name = stdscr.getstr(1, 0, 20).decode("utf-8").strip()
         
         if employee_name.lower() == "back":
-            stdscr.clear()
-            stdscr.addstr(0, 0, "Returning to the main menu...")
-            stdscr.refresh()
-            curses.napms(1000)
+            send_simple_notification(stdscr, "Returning to the main menu...", 1000)
             break
         
         try:
@@ -85,15 +87,10 @@ def add_user(stdscr):
             if select_key_registration in ("", "y"):
                 register_keycard(stdscr, user)
 
-            stdscr.clear()
-            stdscr.addstr(0, 0, f"Employee '{employee_name}' added successfully!")
+            send_simple_notification(stdscr, f"Employee '{employee_name}' added successfully!", 2000)
         except Exception as e:
-            stdscr.clear()
-            stdscr.addstr(0, 0, f"There was an issue while adding '{employee_name}': {str(e)}")
-        finally:
-            stdscr.refresh()
-            curses.napms(2000)
-            break
+            send_simple_notification(stdscr, f"There was an issue while adding '{employee_name}': {str(e)}", 1000)
+        break
 
 def remove_user(stdscr):
     while True:
@@ -105,23 +102,16 @@ def remove_user(stdscr):
         employee_id = stdscr.getstr(1, 0, 20).decode("utf-8").strip()
         
         if employee_id.lower() == "back":
-            stdscr.clear()
-            stdscr.addstr(0, 0, "Returning to the main menu...")
-            stdscr.refresh()
-            curses.napms(1000)
+            send_simple_notification(stdscr, "Returning to the main menu...", 1000)
             break
         
         try:
             DynamoDB.delete_user(employee_id)
-            stdscr.clear()
-            stdscr.addstr(0, 0, f"User '{employee_id}' removed successfully!")
+            send_simple_notification(stdscr, f"User '{employee_id}' removed successfully!", 2000)
         except:
-            stdscr.clear()
-            stdscr.addstr(0, 0, f"There was an issue whilst deleting '{employee_id}'! Please try again.")
-        finally:
-            stdscr.refresh()
-            curses.napms(2000)
-            break        
+            send_simple_notification(stdscr, f"There was an issue whilst deleting '{employee_id}'! Please try again.", 2000)
+
+        break        
 def register_keycard(stdscr, employee_id=None):
     while True:
         while employee_id is None:
@@ -133,15 +123,12 @@ def register_keycard(stdscr, employee_id=None):
             _employee_id = stdscr.getstr(1, 0, 20).decode("utf-8").strip()
         
             if _employee_id.lower() == "back":
-                stdscr.clear()
-                stdscr.addstr(0, 0, "Returning to the main menu...")
-                stdscr.refresh()
-                curses.napms(1000)
+                send_simple_notification(stdscr, "Returning to the main menu...", 1000)
                 break
         
         try:
             user = DynamoDB.get_user(employee_id)
-            stdscr.addstr(2, 0, "Awaiting Key presentation..........")
+            stdscr.addstr(2, 0, "Awaiting Key Presentation..........")
             stdscr.refresh()
 
             id, _ = rfid_reader.read_key()
@@ -151,14 +138,9 @@ def register_keycard(stdscr, employee_id=None):
                 
             DynamoDB.register_card_to_user(employee_id, str(id))
             
-            stdscr.clear()
-            stdscr.addstr(0, 0, f"User '{employee_id}' has had their Keycard Registered successfully!")
+            send_simple_notification(stdscr, f"User '{employee_id}' has had their Keycard Registered successfully!", 2000)
         except:
-            stdscr.clear()
-            stdscr.addstr(0, 0, f"There was an issue whilst deleting '{employee_id}'! Please try again.")
-        finally:
-            stdscr.refresh()
-            curses.napms(2000)
+            send_simple_notification(stdscr, f"There was an issue whilst deleting '{employee_id}'! Please try again.", 2000)
             break
         
 def watch_log_file(file_path, log_queue):
