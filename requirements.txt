@@ -4,3 +4,5 @@ python-dotenv
 RPi.GPIO
 picamera
 smbus2
+mfrc522
+cryptography
