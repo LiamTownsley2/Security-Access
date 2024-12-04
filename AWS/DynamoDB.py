@@ -4,10 +4,13 @@ import random
 import time
 from typing import Optional
 import os
+import logging
 
 dynamodb = boto3.resource('dynamodb', aws_access_key_id=os.getenv('AWS_ACCESS_KEY_ID'), aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY'), aws_session_token=os.getenv('AWS_SESSION_TOKEN'), region_name=os.getenv('AWS_REGION'))
 users_table = dynamodb.Table('Users')
 access_log_table = dynamodb.Table('AccessLog')
+
+thread_logger = logging.getLogger("ThreadLogger")
 
 def generate_unique_id():
     timestamp = int(time.time() * 1000)
@@ -32,7 +35,7 @@ def delete_user(user_id: str):
 
 def register_card_to_user(user_id: str, card_id: str):
     user = get_user(user_id)
-    print(f"register_card_to_user:get_user ->> {user}")
+    thread_logger.info(f"register_card_to_user:get_user ->> {user}")
     if user:
         user['CardID'] = card_id
         users_table.put_item(Item=user)
@@ -55,9 +58,9 @@ def register_entry(tag_id: str, user_id: Optional[str]):
             users_table.put_item(Item=user)
 
 def get_user(user_id: str):
-    print(f"Attempting to retrieve user with UserID: {user_id}")
+    thread_logger.info(f"Attempting to retrieve user with UserID: {user_id}")
     response = users_table.get_item(Key={"UserID": user_id})
-    print(f"Get_User RESPONSE ->>>> {response.get('Item')}")
+    thread_logger.info(f"Get_User RESPONSE ->>>> {response.get('Item')}")
     return response.get('Item')
 
 def get_entries_count(user_id: str):
