@@ -10,7 +10,7 @@ users_table = dynamodb.Table('Users')
 access_log_table = dynamodb.Table('AccessLog')
 
 def generate_unique_id():
-    timestamp = int(datetime.time() * 1000)
+    timestamp = int(datetime.datetime.now().timestamp() * 1000)
     random_number = random.randint(1000, 9999)
     return f"{timestamp}{random_number}"
 
