@@ -7,6 +7,7 @@ import threading
 import logging
 import Util
 import time
+import traceback
 
 from queue import Queue
 from Classes.RFID_Reader import RFID_Reader
@@ -89,9 +90,13 @@ def add_user(stdscr):
         except Exception as e:
             stdscr.clear()
             stdscr.addstr(0, 0, f"There was an issue while adding '{employee_name}': {str(e)}")
+            stdscr.addstr(3, 0, error_traceback)
+            error_traceback = traceback.format_exc()
+            with open("CUSTOM_error_log.txt", "a") as log_file:
+                log_file.write(f"There was an issue while adding '{employee_name}': {str(e)}\n{error_traceback}\n")
         finally:
             stdscr.refresh()
-            curses.napms(3000)
+            curses.napms(10000)
             break
 
 def remove_user(stdscr):
