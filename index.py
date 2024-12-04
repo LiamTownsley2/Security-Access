@@ -32,8 +32,8 @@ def start_reader():
                 DynamoDB.register_entry(str(id), user['UserID'])
                 
                 entries = DynamoDB.get_entries_count(user['UserID'])
-                rfid_reader.write_key(entries)
-                
+                # rfid_reader.write_key(entries)
+                print(f"You have entered this building {entries} time(s) before.")
                 green_led = GPIO_Pin(12) # The Green LED represents unlocking the door.
                 green_led.enable(3)
             else:
