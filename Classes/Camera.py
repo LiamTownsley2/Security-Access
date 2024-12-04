@@ -5,7 +5,7 @@ camera = picamera.PiCamera()
 
 class Camera:
     def start_recording(self, user_id:str, seconds:int):       
-        camera.start_recording(f'{user_id}.h264')
+        camera.start_recording(f'video-data/{user_id}.h264')
         if seconds:
             sleep(seconds)
             self.end_recording()

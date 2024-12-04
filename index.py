@@ -39,7 +39,8 @@ def start_reader():
             else:
                 camera = Camera()
                 file_name = camera.start_recording(id, 5)
-                S3.upload_to_s3(file_name, "cmp408-cctv-recordings", f"cctv-footage/{file_name}")
+                upload_url = S3.upload_to_s3(file_name, "cmp408-cctv-recordings", f"cctv-footage/{file_name}")
+                print(f"S3 Upload Link: {upload_url}")
     except KeyboardInterrupt:
         print("\n\nReturning to Main Menu.\n\n")
 
