@@ -6,7 +6,9 @@ import curses
 import threading
 import logging
 import Util
+import time
 
+from queue import Queue
 from Classes.RFID_Reader import RFID_Reader
 from AWS import DynamoDB, S3
 from Classes.GPIO_Pin import GPIO_Pin
@@ -15,11 +17,14 @@ from Classes.Camera import Camera
 Util.initialise_gpio_pins()
 rfid_reader = RFID_Reader()
 
+thread_logger_file_name = "thread_reader.log"
 thread_logger = logging.getLogger("ThreadLogger")
 thread_logger.setLevel(logging.INFO)
-thread_file_handler = logging.FileHandler("thread_reader.log")
+thread_file_handler = logging.FileHandler(thread_logger_file_name)
 thread_file_handler.setFormatter(logging.Formatter("%(asctime)s - %(levelname)s - %(message)s"))
 thread_logger.addHandler(thread_file_handler)
+
+log_queue = Queue()
 
 def validate_key(user, text):
     if not user: return False
@@ -146,13 +151,54 @@ def register_keycard(stdscr, employee_id=None):
             stdscr.refresh()
             curses.napms(3000)
             break
-    
+        
+def watch_log_file(file_path, log_queue):
+    with open(file_path, 'r') as log_file:
+        log_file.seek(0, 2)
+        while True:
+            line = log_file.readline()
+            if line:
+                log_queue.put(line)
+            else:
+                time.sleep(0.1)
+
+def view_rfid_logs(stdscr, log_queue):
+        curses.curs_set(0)
+        stdscr.nodelay(True)
+
+        stdscr.clear()
+        stdscr.addstr(0, 0, "Log Viewer (Press 'q' to quit):")
+
+        while True:
+            try:
+                key = stdscr.getkey()
+                if key == 'q':
+                    break
+            except curses.error:
+                pass
+                
+            while not log_queue.empty():
+                log_lines.append(log_queue.get())
+
+            log_lines = log_lines[-20:]
+
+            stdscr.clear()
+            stdscr.addstr(0, 0, "Log Viewer (Press 'q' to quit):")
+            for idx, line in enumerate(log_lines, start=1):
+                stdscr.addstr(idx, 0, line.strip())
+            stdscr.refresh()
+            curses.napms(1000)
+            
 def main_menu(stdscr):
     curses.curs_set(0)
     stdscr.clear()
     
     rfid_enabled = False
     web_enabled = False
+    log_lines = []
+
+    log_thread = threading.Thread(target=watch_log_file, args=(thread_logger_file_name, log_queue), daemon=True)
+    log_thread.start()
     
     curses.start_color()
     curses.init_pair(1, curses.COLOR_RED, curses.COLOR_BLACK)
@@ -189,6 +235,7 @@ def main_menu(stdscr):
         stdscr.addstr(15, 0, "3. Revoke an Employees Access", curses.color_pair(3))
         stdscr.addstr(16, 0, "4. Toggle RFID Scanner", curses.color_pair(3))
         stdscr.addstr(17, 0, "5. Toggle Web Interface", curses.color_pair(3))
+        stdscr.addstr(18, 0, "6. View RFID Logs", curses.color_pair(3))
         stdscr.addstr(19, 0, "q. Quit", curses.color_pair(3))
         
         stdscr.addstr(21, 0, "Please select an option >> ")
@@ -206,6 +253,9 @@ def main_menu(stdscr):
             reader_thread.start()
         elif key == ord('5'):
             web_enabled = not web_enabled
+        elif key == ord('6'):
+            curses.wrapper(view_rfid_logs, log_lines)
+
         elif key == ord('q'):
             break
 
