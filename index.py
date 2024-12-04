@@ -79,11 +79,11 @@ def add_user(stdscr):
             stdscr.addstr(0, 0, "Would you like to register a keycard at this time? (Y/n): ")
             stdscr.refresh()
             curses.echo()
-            
+
             select_key_registration = stdscr.getstr(1, 0, 20).decode("utf-8").strip().lower()
             if select_key_registration in ("", "y"):
                 register_keycard(user)
-        
+
             stdscr.clear()
             stdscr.addstr(0, 0, f"Employee '{employee_name}' added successfully!")
         except Exception as e:
