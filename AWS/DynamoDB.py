@@ -1,30 +1,27 @@
 import boto3
-import datetime
+from datetime import time, datetime, timezone
 import random
 from typing import Optional
 import os
 
-print(f"Access Key: {os.getenv('AWS_ACCESS_KEY_ID')}\nSecret Key: {os.getenv('AWS_SECRET_ACCESS_KEY')}\nRegion:{os.getenv('AWS_REGION')}")
-dynamodb = boto3.resource('dynamodb', aws_access_key_id=os.getenv('AWS_ACCESS_KEY_ID'), aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY'), aws_session_token=os.getenv('AWS_SESSION_TOKEN'), region_name=os.getenv('AWS_REGION'))
+dynamodb = boto3.resource('dynamodb', aws_access_key_id=os.getenv('AWS_ACCESS_KEY_ID'), aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY'), region_name=os.getenv('AWS_REGION'))
 users_table = dynamodb.Table('Users')
 access_log_table = dynamodb.Table('AccessLog')
 
 def generate_unique_id():
-    timestamp = int(datetime.datetime.now().timestamp() * 1000)
+    timestamp = int(time.time() * 1000)
     random_number = random.randint(1000, 9999)
     return f"{timestamp}{random_number}"
 
 def register_user(name: str):
-    user_id = generate_unique_id()
-    
-    users_table.put_item(
+    response = users_table.put_item(
         Item={
-            "UserID": user_id,
+            "UserID": str(generate_unique_id()),
             "Name": name,
             "CardID": None
         }
     )
-    return user_id
+    return response
 
 def delete_user(user_id: str):
     response = users_table.delete_item(
@@ -42,17 +39,17 @@ def register_card_to_user(user_id: str, card_id: str):
 
 def register_entry(tag_id: str, user_id: Optional[str]):
     entry = {
-        "LogID": str(generate_unique_id()),
+        "LogID": str(generate_unique_id()),  # Generate unique log ID
         "TagID": tag_id,
         "UserID": user_id,
-        "Time": datetime.datetime.now(datetime.timezone.utc).isoformat()
+        "Time": datetime.now(timezone.utc).isoformat()
     }
     access_log_table.put_item(Item=entry)
 
     if user_id:
         user = get_user(user_id)
         if user:
-            user['LastScanned'] = datetime.datetime.now(datetime.timezone.utc).isoformat()
+            user['LastScanned'] = datetime.now(timezone.utc).isoformat()
             users_table.put_item(Item=user)
 
 def get_user(user_id: str):

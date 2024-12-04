@@ -38,7 +38,8 @@ def start_reader():
                 green_led.enable(3)
             else:
                 camera = Camera()
-                camera.start_recording(id, 5)
+                file_name = camera.start_recording(id, 5)
+                S3.upload_to_s3(file_name, "cmp408-cctv-recordings", f"cctv-footage/{file_name}")
     except KeyboardInterrupt:
         print("\n\nReturning to Main Menu.\n\n")
 

@@ -9,6 +9,7 @@ class Camera:
         if seconds:
             sleep(seconds)
             self.end_recording()
+            return f'{user_id}.h264'
     
     def end_recording(self):
         camera.stop_recording()
