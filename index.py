@@ -8,6 +8,13 @@ from AWS import DynamoDB, S3
 from Classes.GPIO_Pin import GPIO_Pin
 from Classes.Camera import Camera
 import threading
+import logging
+
+thread_logger = logging.getLogger("ThreadLogger")
+thread_logger.setLevel(logging.INFO)
+thread_file_handler = logging.FileHandler("thread_reader.log")
+thread_file_handler.setFormatter(logging.Formatter("%(asctime)s - %(levelname)s - %(message)s"))
+thread_logger.addHandler(thread_file_handler)
 
 Util.initialise_gpio_pins()
 rfid_reader = RFID_Reader()
@@ -18,32 +25,30 @@ def validate_key(user, text):
     return True
 
 def start_reader():
-    try:
         while True:
-            print("\tstart_reader() WT")
-            id, text = rfid_reader.read_key()
-            print(f"\t Card Read: ({id}) {text}")
-            user = DynamoDB.get_user_by_card(str(id))
-            print(f"\t {user}")
-            is_valid = validate_key(user, text)
-            print(f"\tKey Valid: {is_valid}")
-            print(f"*{'VALID' if is_valid else 'INVALID'} TAG READ* | ID: {id} | Text: '{text}'")
-            print(f"\t{user}")
-            if is_valid:
-                DynamoDB.register_entry(str(id), user['UserID'])
-                
-                entries = DynamoDB.get_entries_count(user['UserID'])
-                # rfid_reader.write_key(entries)
-                print(f"You have entered this building {entries} time(s) before.")
-                green_led = GPIO_Pin(12) # The Green LED represents unlocking the door.
-                green_led.enable(3)
-            else:
-                camera = Camera()
-                file_name = camera.start_recording(id, 5)
-                upload_url = S3.upload_to_s3(file_name, "cmp408-cctv-recordings", f"cctv-footage/{file_name}")
-                print(f"S3 Upload Link: {upload_url}")
-    except KeyboardInterrupt:
-        print("\n\nReturning to Main Menu.\n\n")
+            try:
+                thread_logger.info("start_reader() running.")
+                id, text = rfid_reader.read_key()
+                thread_logger.info(f"Card Read: ({id}) {text}")
+                user = DynamoDB.get_user_by_card(str(id))
+                is_valid = validate_key(user, text)
+                thread_logger.info(f"Key Valid: {is_valid}")
+                print(f"*{'VALID' if is_valid else 'INVALID'} TAG READ* | ID: {id} | Text: '{text}'")
+                if is_valid:
+                    DynamoDB.register_entry(str(id), user['UserID'])
+
+                    entries = DynamoDB.get_entries_count(user['UserID'])
+                    # rfid_reader.write_key(entries)
+                    print(f"You have entered this building {entries} time(s) before.")
+                    green_led = GPIO_Pin(12) # The Green LED represents unlocking the door.
+                    green_led.enable(3)
+                else:
+                    camera = Camera()
+                    file_name = camera.start_recording(id, 5)
+                    upload_url = S3.upload_to_s3(file_name, "cmp408-cctv-recordings", f"cctv-footage/{file_name}")
+                    print(f"S3 Upload Link: {upload_url}")
+            except:
+                pass
 
 import curses
 
