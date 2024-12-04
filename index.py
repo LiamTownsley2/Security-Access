@@ -7,6 +7,7 @@ from Classes.RFID_Reader import RFID_Reader
 from AWS import DynamoDB, S3
 from Classes.GPIO_Pin import GPIO_Pin
 from Classes.Camera import Camera
+import threading
 
 Util.initialise_gpio_pins()
 rfid_reader = RFID_Reader()
@@ -202,6 +203,8 @@ def main_menu(stdscr):
             remove_user(stdscr)
         elif key == ord('4'):
             rfid_enabled = not rfid_enabled
+            reader_thread = threading.Thread(target=start_reader, daemon=True)
+            reader_thread.start()
         elif key == ord('5'):
             web_enabled = not web_enabled
         elif key == ord('q'):
