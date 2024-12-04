@@ -2,14 +2,30 @@
 from dotenv import load_dotenv
 load_dotenv()
 
+import curses
+import threading
+import logging
 import Util
+import time
+import traceback
+
+from queue import Queue
 from Classes.RFID_Reader import RFID_Reader
 from AWS import DynamoDB, S3
 from Classes.GPIO_Pin import GPIO_Pin
 from Classes.Camera import Camera
 
 Util.initialise_gpio_pins()
-rfid_reader = RFID_Reader()
+
+thread_logger_file_name = "thread_reader.log"
+thread_logger = logging.getLogger("ThreadLogger")
+thread_logger.setLevel(logging.INFO)
+thread_file_handler = logging.FileHandler(thread_logger_file_name)
+thread_file_handler.setFormatter(logging.Formatter("%(asctime)s - %(levelname)s - %(message)s"))
+thread_logger.addHandler(thread_file_handler)
+
+rfid_reader = RFID_Reader(thread_logger)
+log_queue = Queue()
 
 def validate_key(user, text):
     if not user: return False
@@ -19,95 +35,240 @@ def validate_key(user, text):
 def start_reader():
     try:
         while True:
-            print("\tstart_reader() WT")
+            thread_logger.info("start_reader() running.")
             id, text = rfid_reader.read_key()
-            print(f"\t Card Read: ({id}) {text}")
+            thread_logger.info(f"Card Read: ({id}) {text}")
             user = DynamoDB.get_user_by_card(str(id))
-            print(f"\t {user}")
+            thread_logger.info(f"\t {user}")
             is_valid = validate_key(user, text)
-            print(f"\tKey Valid: {is_valid}")
-            print(f"*{'VALID' if is_valid else 'INVALID'} TAG READ* | ID: {id} | Text: '{text}'")
-            print(f"\t{user}")
+            thread_logger.info(f"Key Valid: {is_valid}")
+            thread_logger.info(f"*{'VALID' if is_valid else 'INVALID'} TAG READ* | ID: {id} | Text: '{text}'")
             if is_valid:
                 DynamoDB.register_entry(str(id), user['UserID'])
-                
                 entries = DynamoDB.get_entries_count(user['UserID'])
-                # rfid_reader.write_key(entries)
-                print(f"You have entered this building {entries} time(s) before.")
+                thread_logger.info(f"You have entered this building {entries} time(s) before.")
                 green_led = GPIO_Pin(12) # The Green LED represents unlocking the door.
                 green_led.enable(3)
             else:
                 camera = Camera()
                 file_name = camera.start_recording(id, 5)
                 upload_url = S3.upload_to_s3(file_name, "cmp408-cctv-recordings", f"cctv-footage/{file_name}")
-                print(f"S3 Upload Link: {upload_url}")
-    except KeyboardInterrupt:
-        print("\n\nReturning to Main Menu.\n\n")
-
-def add_user():
-    try:
-        employee_name = input("What is this employee's FULL LEGAL name?\n> ")
-        user = DynamoDB.register_user(employee_name)
-        print(f"Outputted user: {user}")
-        select_key_registration = input("Would you like to register a keycard at this time? (Y/n)\n> ")
-        if select_key_registration == "" or "y" in select_key_registration.lower():
-            register_keycard(user)
-    except KeyboardInterrupt:
-        print("\n\nReturning to Main Menu.\n\n")
-
-def remove_user():
-    try:
-        employee_id = input("What is the employee's ID?\n> ")
-        DynamoDB.delete_user(employee_id)
-    except KeyboardInterrupt:
-        print("\n\nReturning to Main Menu.\n\n")
+                thread_logger.info(f"S3 Upload Link: {upload_url}")
     except Exception as e:
-        print(f"\nThere was an error whilst removing this employee!\n{e}\n")
+        thread_logger.error(e)
 
-def register_keycard(employee_id = None):
-    while employee_id is None:
-        _employee_id = input("What is the employee's ID?\n> ")
-        user = DynamoDB.get_user(_employee_id)
-        if user:
-            employee_id = _employee_id
-        else:
-            print("This user does not exist!\n")
 
-    id, _ = rfid_reader.read_key()
-    users_holding_card = DynamoDB.get_users_by_card(str(id))
-    print(f"users_holding_card: {users_holding_card}")
-    if len(users_holding_card) > 0:
-        DynamoDB.remove_all_links_to_card(id)
-    
-    DynamoDB.register_card_to_user(employee_id, str(id))
-    return print("Card Registration Successful!")
+def add_user(stdscr):
+    while True:
+        stdscr.clear()
+        stdscr.addstr(0, 0, "Enter full name of the Employee (or type 'back' to return):")
+        stdscr.refresh()
 
-def not_implemented():
-    raise NotImplementedError
+        curses.echo()
+        employee_name = stdscr.getstr(1, 0, 20).decode("utf-8").strip()
+        
+        if employee_name.lower() == "back":
+            stdscr.clear()
+            stdscr.addstr(0, 0, "Returning to the main menu...")
+            stdscr.refresh()
+            curses.napms(1000)
+            break
+        
+        try:
+            user = DynamoDB.register_user(employee_name)
+            stdscr.clear()
+            stdscr.addstr(0, 0, "Would you like to register a keycard at this time? (Y/n): ")
+            stdscr.refresh()
+            curses.echo()
 
-menu = [
-    ("Toggle RFID Reader", start_reader),
-    ("Add an Employee", add_user),
-    ("Remove an Employee", remove_user),
-    ("Register a Keycard", register_keycard),
-]
+            select_key_registration = stdscr.getstr(1, 0, 20).decode("utf-8").strip().lower()
+            if select_key_registration in ("", "y"):
+                register_keycard(stdscr, user)
 
-def main_menu():
-        print("Welcome to the RFID App! Please select from the following options:")
-        for idx, item in enumerate(menu):
-            print(f"{idx + 1}. {item[0]}")
+            stdscr.clear()
+            stdscr.addstr(0, 0, f"Employee '{employee_name}' added successfully!")
+        except Exception as e:
+            stdscr.clear()
+            stdscr.addstr(0, 0, f"There was an issue while adding '{employee_name}': {str(e)}")
+            error_traceback = traceback.format_exc()
+            stdscr.addstr(3, 0, error_traceback)
+            with open("CUSTOM_error_log.txt", "a") as log_file:
+                log_file.write(f"There was an issue while adding '{employee_name}': {str(e)}\n{error_traceback}\n")
+        finally:
+            stdscr.refresh()
+            curses.napms(10000)
+            break
 
-        selection = input("> ")
-        # try:
-        menu[int(selection) - 1][1]() # Execute Menu function
-        # except Exception as e:
-            # print(f"Error in selection: {e.with_traceback(e.__traceback__)}\n")
+def remove_user(stdscr):
+    while True:
+        stdscr.clear()
+        stdscr.addstr(0, 0, "Enter the ID of the Employee that should be removed (or type 'back' to return):")
+        stdscr.refresh()
+
+        curses.echo()
+        employee_id = stdscr.getstr(1, 0, 20).decode("utf-8").strip()
+        
+        if employee_id.lower() == "back":
+            stdscr.clear()
+            stdscr.addstr(0, 0, "Returning to the main menu...")
+            stdscr.refresh()
+            curses.napms(1000)
+            break
+        
+        try:
+            DynamoDB.delete_user(employee_id)
+            stdscr.clear()
+            stdscr.addstr(0, 0, f"User '{employee_id}' removed successfully!")
+        except:
+            stdscr.clear()
+            stdscr.addstr(0, 0, f"There wasan issue whilst deleting '{employee_id}'! Please try again.")
+        finally:
+            stdscr.refresh()
+            curses.napms(3000)
+            break        
+def register_keycard(stdscr, employee_id=None):
+    while True:
+        while employee_id is None:
+            stdscr.clear()
+            stdscr.addstr(0, 0, "Enter the Employee's ID (or type 'back' to return):")
+            stdscr.refresh()
+
+            curses.echo()
+            _employee_id = stdscr.getstr(1, 0, 20).decode("utf-8").strip()
+        
+            if _employee_id.lower() == "back":
+                stdscr.clear()
+                stdscr.addstr(0, 0, "Returning to the main menu...")
+                stdscr.refresh()
+                curses.napms(1000)
+                break
+        
+        try:
+            user = DynamoDB.get_user(employee_id)
+            stdscr.addstr(4, 0, "Awaiting Key presentation..........")
+            stdscr.refresh()
+
+            id, _ = rfid_reader.read_key()
+            users_holding_card = DynamoDB.get_users_by_card(str(id))
+            if len(users_holding_card) > 0:
+                DynamoDB.remove_all_links_to_card(id)
+                
+            DynamoDB.register_card_to_user(employee_id, str(id))
             
-if __name__ == "__main__":
-    try:
+            stdscr.clear()
+            stdscr.addstr(0, 0, f"User '{employee_id}' has had their Keycard Registered successfully!")
+        except:
+            stdscr.clear()
+            stdscr.addstr(0, 0, f"There was an issue whilst deleting '{employee_id}'! Please try again.")
+        finally:
+            stdscr.refresh()
+            curses.napms(3000)
+            break
+        
+def watch_log_file(file_path, log_queue):
+    with open(file_path, 'r') as log_file:
+        log_file.seek(0, 2)
         while True:
-            main_menu()
-    except KeyboardInterrupt:
-        print("Goodbye.")
-    finally:
-        Util.cleanup_gpio()
+            line = log_file.readline()
+            if line:
+                log_queue.put(line)
+            else:
+                time.sleep(0.1)
+
+def view_rfid_logs(stdscr, log_queue):
+    curses.curs_set(0)
+    stdscr.nodelay(True)
+    stdscr.clear()
+    
+    stdscr.addstr(0, 0, "Log Viewer (Press 'q' to quit):")
+    
+    log_lines = []
+    while True:
+        try:
+            key = stdscr.getkey()
+            if key == 'q':
+                break
+        except curses.error:
+            pass
+        
+        while not log_queue.empty():
+            log_lines.append(log_queue.get())
+        
+        log_lines = log_lines[-20:]
+        
+        for idx, line in enumerate(log_lines, start=1):
+            stdscr.addstr(idx, 0, line.strip())
+        
+        stdscr.refresh()
+        time.sleep(0.1)
+            
+def main_menu(stdscr):
+    curses.curs_set(0)
+    stdscr.clear()
+    
+    rfid_enabled = False
+    web_enabled = False
+
+    log_thread = threading.Thread(target=watch_log_file, args=(thread_logger_file_name, log_queue), daemon=True)
+    log_thread.start()
+    
+    curses.start_color()
+    curses.init_pair(1, curses.COLOR_RED, curses.COLOR_BLACK)
+    curses.init_pair(3, curses.COLOR_CYAN, curses.COLOR_BLACK)
+    curses.init_pair(2, curses.COLOR_GREEN, curses.COLOR_BLACK)
+    
+    while True:
+        stdscr.clear()
+
+        stdscr.addstr(0, 0, "    ____  ______________     _____ _________    _   ___   ____________ ", curses.color_pair(1))
+        stdscr.addstr(1, 0, "   / __ \/ ____/  _/ __ \   / ___// ____/   |  / | / / | / / ____/ __ \\", curses.color_pair(1))
+        stdscr.addstr(2, 0, "  / /_/ / /_   / // / / /   \__ \/ /   / /| | /  |/ /  |/ / __/ / /_/ /", curses.color_pair(1))
+        stdscr.addstr(3, 0, " / _, _/ __/ _/ // /_/ /   ___/ / /___/ ___ |/ /|  / /|  / /___/ _, _/ ", curses.color_pair(1))
+        stdscr.addstr(4, 0, "/_/ |_/_/   /___/_____/   /____/\____/_/  |_/_/ |_/_/ |_/_____/_/ |_|", curses.color_pair(1))
+        
+        stdscr.addstr(6, 0, "Welcome to the Command Line Interface.", curses.A_UNDERLINE)
+        stdscr.addstr(8,0,"Interface Status:                                ", curses.color_pair(1) | curses.A_BOLD)
+        stdscr.addstr(9, 0, "RFID Scanning Interface:                         ", curses.color_pair(1) | curses.A_BOLD)
+        if rfid_enabled:
+            stdscr.addstr(9, 25, f"Working and Operational", curses.color_pair(2))
+        else:
+            stdscr.addstr(9, 25, f"Disabled", curses.color_pair(2))
+        
+        stdscr.addstr(10, 0, "Web Interface:                                   ", curses.color_pair(1) | curses.A_BOLD)
+        if web_enabled:
+            stdscr.addstr(10, 15, f"Working and Operational", curses.color_pair(2))
+        else:
+            stdscr.addstr(10, 15, f"Disabled", curses.color_pair(1))
+        
+        
+        stdscr.addstr(12, 0, "Main Menu", curses.A_UNDERLINE)   
+        stdscr.addstr(13, 0, "1. Register an Employee", curses.color_pair(3))
+        stdscr.addstr(14, 0, "2. Register a Keycard", curses.color_pair(3))
+        stdscr.addstr(15, 0, "3. Revoke an Employees Access", curses.color_pair(3))
+        stdscr.addstr(16, 0, "4. Toggle RFID Scanner", curses.color_pair(3))
+        stdscr.addstr(17, 0, "5. Toggle Web Interface", curses.color_pair(3))
+        stdscr.addstr(18, 0, "6. View RFID Logs", curses.color_pair(3))
+        stdscr.addstr(19, 0, "q. Quit", curses.color_pair(3))
+        
+        stdscr.addstr(21, 0, "Please select an option >> ")
+        
+        stdscr.refresh()
+
+        key = stdscr.getch()
+        if key == ord('1'):
+            add_user(stdscr)
+        elif key == ord('3'):
+            remove_user(stdscr)
+        elif key == ord('4'):
+            rfid_enabled = not rfid_enabled
+            reader_thread = threading.Thread(target=start_reader, daemon=True)
+            reader_thread.start()
+        elif key == ord('5'):
+            web_enabled = not web_enabled
+        elif key == ord('6'):
+            curses.wrapper(view_rfid_logs, log_queue)
+
+        elif key == ord('q'):
+            break
+
+curses.wrapper(main_menu)
