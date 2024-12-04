@@ -75,19 +75,20 @@ def add_user(stdscr):
         
         try:
             user = DynamoDB.register_user(employee_name)
-            stdscr.addstr(4, 0, "Would you like to register a keycard at this time? (Y/n)\n> ")
+            stdscr.clear()
+            stdscr.addstr(0, 0, "Would you like to register a keycard at this time? (Y/n): ")
             stdscr.refresh()
             curses.echo()
             
-            select_key_registration = stdscr.getstr(1, 0, 20).decode("utf-8").strip()
-            if select_key_registration == "" or "y" in select_key_registration.lower():
+            select_key_registration = stdscr.getstr(1, 0, 20).decode("utf-8").strip().lower()
+            if select_key_registration in ("", "y"):
                 register_keycard(user)
         
             stdscr.clear()
             stdscr.addstr(0, 0, f"Employee '{employee_name}' added successfully!")
-        except:
+        except Exception as e:
             stdscr.clear()
-            stdscr.addstr(0, 0, f"There was an issue whilst adding '{employee_name}'! Please try again.")
+            stdscr.addstr(0, 0, f"There was an issue while adding '{employee_name}': {str(e)}")
         finally:
             stdscr.refresh()
             curses.napms(3000)
