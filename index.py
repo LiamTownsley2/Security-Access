@@ -146,37 +146,6 @@ def register_keycard(stdscr, employee_id=None):
             stdscr.refresh()
             curses.napms(3000)
             break
-
-def display_log(stdscr, log_file):
-    # Set up curses
-    curses.curs_set(0)  # Hide the cursor
-    stdscr.clear()
-
-    # Loop to continuously update the screen
-    while True:
-        stdscr.clear()
-        stdscr.border(0)
-
-        # Read the contents of the log file
-        try:
-            with open(log_file, "r") as f:
-                lines = f.readlines()
-        except FileNotFoundError:
-            lines = ["Log file not found."]
-
-        # Calculate the available window size
-        height, width = stdscr.getmaxyx()
-
-        # Display the last lines that fit in the window
-        start_line = max(0, len(lines) - (height - 2))  # Leave space for borders
-        for i, line in enumerate(lines[start_line:], start=1):
-            if i >= height - 1:  # Avoid exceeding the window height
-                break
-            stdscr.addstr(i, 1, line[:width-2])  # Trim line to fit width
-
-        stdscr.refresh()
-        curses.napms(1000)
-
     
 def main_menu(stdscr):
     curses.curs_set(0)
@@ -220,7 +189,6 @@ def main_menu(stdscr):
         stdscr.addstr(15, 0, "3. Revoke an Employees Access", curses.color_pair(3))
         stdscr.addstr(16, 0, "4. Toggle RFID Scanner", curses.color_pair(3))
         stdscr.addstr(17, 0, "5. Toggle Web Interface", curses.color_pair(3))
-        stdscr.addstr(18, 0, "6. Display Thread Log", curses.color_pair(3))
         stdscr.addstr(19, 0, "q. Quit", curses.color_pair(3))
         
         stdscr.addstr(21, 0, "Please select an option >> ")
@@ -238,8 +206,6 @@ def main_menu(stdscr):
             reader_thread.start()
         elif key == ord('5'):
             web_enabled = not web_enabled
-        elif key == ord('6'):
-            display_log(stdscr, "thread_reader.log")
         elif key == ord('q'):
             break
 
