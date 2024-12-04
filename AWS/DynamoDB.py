@@ -56,7 +56,7 @@ def register_entry(tag_id: str, user_id: Optional[str]):
 def get_user(user_id: str):
     print(f"Attempting to retrieve user with UserID: {user_id}")
     response = users_table.get_item(Key={"UserID": user_id})
-    print(f"Get_User RESPONSE ->>>> {response}")
+    print(f"Get_User RESPONSE ->>>> {response.get('Item')}")
     return response.get('Item')
 
 def get_entries_count(user_id: str):
