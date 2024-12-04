@@ -19,7 +19,6 @@ def register_user(name: str):
         Item={
             "UserID": str(generate_unique_id()),
             "Name": name,
-            "CardID": None
         }
     )
     return response
