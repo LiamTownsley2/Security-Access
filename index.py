@@ -47,6 +47,7 @@ def add_user():
     try:
         employee_name = input("What is this employee's FULL LEGAL name?\n> ")
         user = DynamoDB.register_user(employee_name)
+        print(f"Outputted user: {user}")
         select_key_registration = input("Would you like to register a keycard at this time? (Y/n)\n> ")
         if select_key_registration == "" or "y" in select_key_registration.lower():
             register_keycard(user.inserted_id)
