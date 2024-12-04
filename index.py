@@ -83,7 +83,7 @@ def add_user(stdscr):
 
             select_key_registration = stdscr.getstr(1, 0, 20).decode("utf-8").strip().lower()
             if select_key_registration in ("", "y"):
-                register_keycard(user)
+                register_keycard(stdscr, user)
 
             stdscr.clear()
             stdscr.addstr(0, 0, f"Employee '{employee_name}' added successfully!")
