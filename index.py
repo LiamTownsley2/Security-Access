@@ -7,7 +7,6 @@ from Classes.RFID_Reader import RFID_Reader
 from AWS import DynamoDB, S3
 from Classes.GPIO_Pin import GPIO_Pin
 from Classes.Camera import Camera
-from bson.objectid import ObjectId
 
 Util.initialise_gpio_pins()
 rfid_reader = RFID_Reader()
@@ -57,7 +56,7 @@ def add_user():
 def remove_user():
     try:
         employee_id = input("What is the employee's ID?\n> ")
-        DynamoDB.delete_user(ObjectId(employee_id))
+        DynamoDB.delete_user(employee_id)
     except KeyboardInterrupt:
         print("\n\nReturning to Main Menu.\n\n")
     except Exception as e:
@@ -66,7 +65,7 @@ def remove_user():
 def register_keycard(employee_id = None):
     while employee_id is None:
         _employee_id = input("What is the employee's ID?\n> ")
-        user = DynamoDB.get_user(ObjectId(_employee_id))
+        user = DynamoDB.get_user(_employee_id)
         if user:
             employee_id = _employee_id
         else:
@@ -78,7 +77,7 @@ def register_keycard(employee_id = None):
     if len(users_holding_card) > 0:
         DynamoDB.remove_all_links_to_card(id)
     
-    DynamoDB.register_card_to_user(ObjectId(employee_id), str(id))
+    DynamoDB.register_card_to_user(employee_id, str(id))
     return print("Card Registration Successful!")
 
 def not_implemented():
