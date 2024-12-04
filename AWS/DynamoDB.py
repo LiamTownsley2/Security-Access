@@ -54,6 +54,7 @@ def register_entry(tag_id: str, user_id: Optional[str]):
             users_table.put_item(Item=user)
 
 def get_user(user_id: str):
+    print(f"Attempting to retrieve user with UserID: {user_id}")
     response = users_table.get_item(Key={"UserID": user_id})
     print(f"Get_User RESPONSE ->>>> {response}")
     return response.get('Item')
