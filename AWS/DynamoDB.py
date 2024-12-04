@@ -1,6 +1,7 @@
 import boto3
 import datetime
 import random
+import time
 from typing import Optional
 import os
 
@@ -9,7 +10,7 @@ users_table = dynamodb.Table('Users')
 access_log_table = dynamodb.Table('AccessLog')
 
 def generate_unique_id():
-    timestamp = int(datetime.time.time() * 1000)
+    timestamp = int(time.time() * 1000)
     random_number = random.randint(1000, 9999)
     return f"{timestamp}{random_number}"
 
