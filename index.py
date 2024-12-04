@@ -75,7 +75,11 @@ def add_user(stdscr):
         
         try:
             user = DynamoDB.register_user(employee_name)
-            select_key_registration = input("Would you like to register a keycard at this time? (Y/n)\n> ")
+            stdscr.addstr(4, 0, "Would you like to register a keycard at this time? (Y/n)\n> ")
+            stdscr.refresh()
+            curses.echo()
+            
+            select_key_registration = stdscr.getstr(1, 0, 20).decode("utf-8").strip()
             if select_key_registration == "" or "y" in select_key_registration.lower():
                 register_keycard(user)
         
