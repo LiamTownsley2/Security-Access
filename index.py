@@ -90,13 +90,9 @@ def add_user(stdscr):
         except Exception as e:
             stdscr.clear()
             stdscr.addstr(0, 0, f"There was an issue while adding '{employee_name}': {str(e)}")
-            error_traceback = traceback.format_exc()
-            stdscr.addstr(3, 0, error_traceback)
-            with open("CUSTOM_error_log.txt", "a") as log_file:
-                log_file.write(f"There was an issue while adding '{employee_name}': {str(e)}\n{error_traceback}\n")
         finally:
             stdscr.refresh()
-            curses.napms(10000)
+            curses.napms(2000)
             break
 
 def remove_user(stdscr):
@@ -121,10 +117,10 @@ def remove_user(stdscr):
             stdscr.addstr(0, 0, f"User '{employee_id}' removed successfully!")
         except:
             stdscr.clear()
-            stdscr.addstr(0, 0, f"There wasan issue whilst deleting '{employee_id}'! Please try again.")
+            stdscr.addstr(0, 0, f"There was an issue whilst deleting '{employee_id}'! Please try again.")
         finally:
             stdscr.refresh()
-            curses.napms(3000)
+            curses.napms(2000)
             break        
 def register_keycard(stdscr, employee_id=None):
     while True:
@@ -145,7 +141,7 @@ def register_keycard(stdscr, employee_id=None):
         
         try:
             user = DynamoDB.get_user(employee_id)
-            stdscr.addstr(4, 0, "Awaiting Key presentation..........")
+            stdscr.addstr(2, 0, "Awaiting Key presentation..........")
             stdscr.refresh()
 
             id, _ = rfid_reader.read_key()
@@ -162,7 +158,7 @@ def register_keycard(stdscr, employee_id=None):
             stdscr.addstr(0, 0, f"There was an issue whilst deleting '{employee_id}'! Please try again.")
         finally:
             stdscr.refresh()
-            curses.napms(3000)
+            curses.napms(2000)
             break
         
 def watch_log_file(file_path, log_queue):

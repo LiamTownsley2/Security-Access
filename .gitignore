@@ -1,2 +1,7 @@
 *.pem
 .env
+__pycache__
+*.pyc
+*.log
+**/__pychache__
+venv/
