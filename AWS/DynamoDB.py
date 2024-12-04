@@ -1,5 +1,5 @@
 import boto3
-from datetime import time, datetime, timezone
+import datetime
 import random
 from typing import Optional
 import os
@@ -10,7 +10,7 @@ users_table = dynamodb.Table('Users')
 access_log_table = dynamodb.Table('AccessLog')
 
 def generate_unique_id():
-    timestamp = int(time.time() * 1000)
+    timestamp = int(datetime.time.time() * 1000)
     random_number = random.randint(1000, 9999)
     return f"{timestamp}{random_number}"
 
@@ -43,14 +43,14 @@ def register_entry(tag_id: str, user_id: Optional[str]):
         "LogID": str(generate_unique_id()),  # Generate unique log ID
         "TagID": tag_id,
         "UserID": user_id,
-        "Time": datetime.now(timezone.utc).isoformat()
+        "Time": datetime.datetime.now(datetime.timezone.utc).isoformat()
     }
     access_log_table.put_item(Item=entry)
 
     if user_id:
         user = get_user(user_id)
         if user:
-            user['LastScanned'] = datetime.now(timezone.utc).isoformat()
+            user['LastScanned'] = datetime.datetime.now(datetime.timezone.utc).isoformat()
             users_table.put_item(Item=user)
 
 def get_user(user_id: str):
