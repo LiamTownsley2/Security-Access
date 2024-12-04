@@ -67,12 +67,14 @@ def get_entries_count(user_id: str):
     return len(response.get('Items', []))
 
 def get_user_by_card(card_id: str):
-    response = users_table.scan(
-        FilterExpression="CardID = :card_id",
-        ExpressionAttributeValues={":card_id": card_id}
-    )
-    items = response.get('Items', [])
-    return items[0] if items else None
+    response = users_table.query(
+            IndexName='CardID',
+            KeyConditionExpression='CardID = :card_id',
+            ExpressionAttributeValues={
+                ':card_id': card_id
+            }
+        )
+    return response.get('Items', [])
 
 def get_users_by_card(card_id: str):
     response = users_table.scan(

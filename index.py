@@ -22,11 +22,11 @@ def start_reader():
             print("\tstart_reader() WT")
             id, text = rfid_reader.read_key()
             print(f"\t Card Read: ({id}) {text}")
-            user = DynamoDB.get_user_by_card(id)
+            user = DynamoDB.get_user_by_card(str(id))
             print(f"\t {user}")
             is_valid = validate_key(user, text)
             print(f"\tKey Valid: {is_valid}")
-            print(f"*{'VALID' if is_valid else 'INVALID'} TAG READ* | ID: {id} | Text: {text}")
+            print(f"*{'VALID' if is_valid else 'INVALID'} TAG READ* | ID: {id} | Text: '{text}'")
             print(f"\t{user}")
             if is_valid:
                 DynamoDB.register_entry(str(id), user['_id'])
