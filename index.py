@@ -29,9 +29,9 @@ def start_reader():
             print(f"*{'VALID' if is_valid else 'INVALID'} TAG READ* | ID: {id} | Text: '{text}'")
             print(f"\t{user}")
             if is_valid:
-                DynamoDB.register_entry(str(id), user['_id'])
+                DynamoDB.register_entry(str(id), user['UserID'])
                 
-                entries = DynamoDB.get_entries_count(user['_id'])
+                entries = DynamoDB.get_entries_count(user['UserID'])
                 rfid_reader.write_key(entries)
                 
                 green_led = GPIO_Pin(12) # The Green LED represents unlocking the door.
