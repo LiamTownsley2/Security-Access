@@ -97,10 +97,10 @@ def main_menu():
             print(f"{idx + 1}. {item[0]}")
 
         selection = input("> ")
-        try:
-            menu[int(selection) - 1][1]() # Execute Menu function
-        except Exception as e:
-            print(f"Error in selection: {e.with_traceback(e.__traceback__)}\n")
+        # try:
+        menu[int(selection) - 1][1]() # Execute Menu function
+        # except Exception as e:
+            # print(f"Error in selection: {e.with_traceback(e.__traceback__)}\n")
             
 if __name__ == "__main__":
     try:
