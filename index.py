@@ -169,7 +169,7 @@ def main_menu(stdscr):
         stdscr.addstr(4, 0, "/_/ |_/_/   /___/_____/   /____/\____/_/  |_/_/ |_/_/ |_/_____/_/ |_|", curses.color_pair(1))
         
         stdscr.addstr(6, 0, "Welcome to the Command Line Interface.", curses.A_UNDERLINE)
-        stdscr.addstr(8,0,"Interface Status:                                ", curses.color_pair(5) | curses.A_BLINK)
+        stdscr.addstr(8,0,"Interface Status:                                ", curses.color_pair(5) | curses.A_BOLD)
         stdscr.addstr(9, 0, "RFID Scanning Interface:                         ", curses.color_pair(5) | curses.A_BOLD)
         if rfid_enabled:
             stdscr.addstr(9, 25, f"Working and Operational", curses.color_pair(6))
