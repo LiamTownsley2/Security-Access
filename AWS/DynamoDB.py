@@ -15,14 +15,16 @@ def generate_unique_id():
     return f"{timestamp}{random_number}"
 
 def register_user(name: str):
-    response = users_table.put_item(
+    user_id = generate_unique_id()
+    
+    users_table.put_item(
         Item={
-            "UserID": str(generate_unique_id()),
+            "UserID": user_id,
             "Name": name,
             "CardID": None
         }
     )
-    return response
+    return user_id
 
 def delete_user(user_id: str):
     response = users_table.delete_item(
@@ -40,7 +42,7 @@ def register_card_to_user(user_id: str, card_id: str):
 
 def register_entry(tag_id: str, user_id: Optional[str]):
     entry = {
-        "LogID": str(generate_unique_id()),  # Generate unique log ID
+        "LogID": str(generate_unique_id()),
         "TagID": tag_id,
         "UserID": user_id,
         "Time": datetime.datetime.now(datetime.timezone().utc).isoformat()
