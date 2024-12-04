@@ -15,7 +15,6 @@ from Classes.GPIO_Pin import GPIO_Pin
 from Classes.Camera import Camera
 
 Util.initialise_gpio_pins()
-rfid_reader = RFID_Reader()
 
 thread_logger_file_name = "thread_reader.log"
 thread_logger = logging.getLogger("ThreadLogger")
@@ -24,6 +23,7 @@ thread_file_handler = logging.FileHandler(thread_logger_file_name)
 thread_file_handler.setFormatter(logging.Formatter("%(asctime)s - %(levelname)s - %(message)s"))
 thread_logger.addHandler(thread_file_handler)
 
+rfid_reader = RFID_Reader(thread_logger)
 log_queue = Queue()
 
 def validate_key(user, text):
@@ -38,7 +38,7 @@ def start_reader():
             id, text = rfid_reader.read_key()
             thread_logger.info(f"Card Read: ({id}) {text}")
             user = DynamoDB.get_user_by_card(str(id))
-            print(f"\t {user}")
+            thread_logger.info(f"\t {user}")
             is_valid = validate_key(user, text)
             thread_logger.info(f"Key Valid: {is_valid}")
             thread_logger.info(f"*{'VALID' if is_valid else 'INVALID'} TAG READ* | ID: {id} | Text: '{text}'")
