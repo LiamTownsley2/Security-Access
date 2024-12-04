@@ -188,7 +188,7 @@ def view_rfid_logs(stdscr, log_queue):
             for idx, line in enumerate(log_lines, start=1):
                 stdscr.addstr(idx, 0, line.strip())
             stdscr.refresh()
-            curses.napms(1000)
+            time.sleep(0.1)
             
 def main_menu(stdscr):
     curses.curs_set(0)
