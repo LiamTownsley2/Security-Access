@@ -44,70 +44,167 @@ def start_reader():
     except KeyboardInterrupt:
         print("\n\nReturning to Main Menu.\n\n")
 
-def add_user():
-    try:
-        employee_name = input("What is this employee's FULL LEGAL name?\n> ")
-        user = DynamoDB.register_user(employee_name)
-        print(f"Outputted user: {user}")
-        select_key_registration = input("Would you like to register a keycard at this time? (Y/n)\n> ")
-        if select_key_registration == "" or "y" in select_key_registration.lower():
-            register_keycard(user)
-    except KeyboardInterrupt:
-        print("\n\nReturning to Main Menu.\n\n")
+import curses
 
-def remove_user():
-    try:
-        employee_id = input("What is the employee's ID?\n> ")
-        DynamoDB.delete_user(employee_id)
-    except KeyboardInterrupt:
-        print("\n\nReturning to Main Menu.\n\n")
-    except Exception as e:
-        print(f"\nThere was an error whilst removing this employee!\n{e}\n")
+def add_user(stdscr):
+    while True:
+        stdscr.clear()
+        stdscr.addstr(0, 0, "Enter full name of the Employee (or type 'back' to return):")
+        stdscr.refresh()
 
-def register_keycard(employee_id = None):
-    while employee_id is None:
-        _employee_id = input("What is the employee's ID?\n> ")
-        user = DynamoDB.get_user(_employee_id)
-        if user:
-            employee_id = _employee_id
-        else:
-            print("This user does not exist!\n")
+        curses.echo()
+        employee_name = stdscr.getstr(1, 0, 20).decode("utf-8").strip()
+        
+        if employee_name.lower() == "back":
+            stdscr.clear()
+            stdscr.addstr(0, 0, "Returning to the main menu...")
+            stdscr.refresh()
+            curses.napms(1000)
+            break
+        
+        try:
+            user = DynamoDB.register_user(employee_name)
+            select_key_registration = input("Would you like to register a keycard at this time? (Y/n)\n> ")
+            if select_key_registration == "" or "y" in select_key_registration.lower():
+                register_keycard(user)
+        
+            stdscr.clear()
+            stdscr.addstr(0, 0, f"Employee '{employee_name}' added successfully!")
+        except:
+            stdscr.clear()
+            stdscr.addstr(0, 0, f"There was an issue whilst adding '{employee_name}'! Please try again.")
+        finally:
+            stdscr.refresh()
+            curses.napms(3000)
+            break
 
-    id, _ = rfid_reader.read_key()
-    users_holding_card = DynamoDB.get_users_by_card(str(id))
-    print(f"users_holding_card: {users_holding_card}")
-    if len(users_holding_card) > 0:
-        DynamoDB.remove_all_links_to_card(id)
-    
-    DynamoDB.register_card_to_user(employee_id, str(id))
-    return print("Card Registration Successful!")
+def remove_user(stdscr):
+    while True:
+        stdscr.clear()
+        stdscr.addstr(0, 0, "Enter the ID of the Employee that should be removed (or type 'back' to return):")
+        stdscr.refresh()
 
-def not_implemented():
-    raise NotImplementedError
+        curses.echo()
+        employee_id = stdscr.getstr(1, 0, 20).decode("utf-8").strip()
+        
+        if employee_id.lower() == "back":
+            stdscr.clear()
+            stdscr.addstr(0, 0, "Returning to the main menu...")
+            stdscr.refresh()
+            curses.napms(1000)
+            break
+        
+        try:
+            DynamoDB.delete_user(employee_id)
+            stdscr.clear()
+            stdscr.addstr(0, 0, f"User '{employee_id}' removed successfully!")
+        except:
+            stdscr.clear()
+            stdscr.addstr(0, 0, f"There wasan issue whilst deleting '{employee_id}'! Please try again.")
+        finally:
+            stdscr.refresh()
+            curses.napms(3000)
+            break        
+def register_keycard(stdscr, employee_id=None):
+    while True:
+        while employee_id is None:
+            stdscr.clear()
+            stdscr.addstr(0, 0, "Enter the Employee's ID (or type 'back' to return):")
+            stdscr.refresh()
 
-menu = [
-    ("Toggle RFID Reader", start_reader),
-    ("Add an Employee", add_user),
-    ("Remove an Employee", remove_user),
-    ("Register a Keycard", register_keycard),
-]
-
-def main_menu():
-        print("Welcome to the RFID App! Please select from the following options:")
-        for idx, item in enumerate(menu):
-            print(f"{idx + 1}. {item[0]}")
-
-        selection = input("> ")
-        # try:
-        menu[int(selection) - 1][1]() # Execute Menu function
-        # except Exception as e:
-            # print(f"Error in selection: {e.with_traceback(e.__traceback__)}\n")
+            curses.echo()
+            _employee_id = stdscr.getstr(1, 0, 20).decode("utf-8").strip()
+        
+            if _employee_id.lower() == "back":
+                stdscr.clear()
+                stdscr.addstr(0, 0, "Returning to the main menu...")
+                stdscr.refresh()
+                curses.napms(1000)
+                break
+        
+        try:
+            user = DynamoDB.get_user(employee_id)
+            id, _ = rfid_reader.read_key()
+            users_holding_card = DynamoDB.get_users_by_card(str(id))
+            if len(users_holding_card) > 0:
+                DynamoDB.remove_all_links_to_card(id)
+                
+            DynamoDB.register_card_to_user(employee_id, str(id))
             
-if __name__ == "__main__":
-    try:
-        while True:
-            main_menu()
-    except KeyboardInterrupt:
-        print("Goodbye.")
-    finally:
-        Util.cleanup_gpio()
+            stdscr.clear()
+            stdscr.addstr(0, 0, f"User '{employee_id}' has had their Keycard Registered successfully!")
+        except:
+            stdscr.clear()
+            stdscr.addstr(0, 0, f"There was an issue whilst deleting '{employee_id}'! Please try again.")
+        finally:
+            stdscr.refresh()
+            curses.napms(3000)
+            break
+    
+    
+def main_menu(stdscr):
+    curses.curs_set(0)
+    stdscr.clear()
+    
+    rfid_enabled = False
+    web_enabled = False
+    
+    curses.start_color()
+    curses.init_pair(1, curses.COLOR_RED, curses.COLOR_BLACK)
+    curses.init_pair(2, curses.COLOR_GREEN, curses.COLOR_BLACK)
+    curses.init_pair(3, curses.COLOR_CYAN, curses.COLOR_BLACK)
+    curses.init_pair(4, curses.COLOR_MAGENTA, curses.COLOR_BLACK)
+    curses.init_pair(5, curses.COLOR_RED, curses.COLOR_PAIRS)
+    curses.init_pair(6, curses.COLOR_GREEN, curses.COLOR_PAIRS)
+
+
+    
+    while True:
+        stdscr.clear()
+
+        stdscr.addstr(0, 0, "    ____  ______________     _____ _________    _   ___   ____________ ", curses.color_pair(1))
+        stdscr.addstr(1, 0, "   / __ \/ ____/  _/ __ \   / ___// ____/   |  / | / / | / / ____/ __ \\", curses.color_pair(1))
+        stdscr.addstr(2, 0, "  / /_/ / /_   / // / / /   \__ \/ /   / /| | /  |/ /  |/ / __/ / /_/ /", curses.color_pair(1))
+        stdscr.addstr(3, 0, " / _, _/ __/ _/ // /_/ /   ___/ / /___/ ___ |/ /|  / /|  / /___/ _, _/ ", curses.color_pair(1))
+        stdscr.addstr(4, 0, "/_/ |_/_/   /___/_____/   /____/\____/_/  |_/_/ |_/_/ |_/_____/_/ |_|", curses.color_pair(1))
+        
+        stdscr.addstr(6, 0, "Welcome to the Command Line Interface.", curses.A_UNDERLINE)
+        stdscr.addstr(8,0,"Interface Status:                                ", curses.color_pair(5) | curses.A_BLINK)
+        stdscr.addstr(9, 0, "RFID Scanning Interface:                         ", curses.color_pair(5) | curses.A_BOLD)
+        if rfid_enabled:
+            stdscr.addstr(9, 25, f"Working and Operational", curses.color_pair(6))
+        else:
+            stdscr.addstr(9, 25, f"Disabled", curses.color_pair(5))
+        
+        stdscr.addstr(10, 0, "Web Interface:                                   ", curses.color_pair(5) | curses.A_BOLD)
+        if web_enabled:
+            stdscr.addstr(10, 15, f"Working and Operational", curses.color_pair(6))
+        else:
+            stdscr.addstr(10, 15, f"Disabled", curses.color_pair(5))
+        
+        
+        stdscr.addstr(12, 0, "Main Menu", curses.A_UNDERLINE)   
+        stdscr.addstr(13, 0, "1. Register an Employee", curses.color_pair(3))
+        stdscr.addstr(14, 0, "2. Register a Keycard", curses.color_pair(3))
+        stdscr.addstr(15, 0, "3. Revoke an Employees Access", curses.color_pair(3))
+        stdscr.addstr(16, 0, f"4. Toggle RFID Scanner", curses.color_pair(3))
+        stdscr.addstr(17, 0, f"5. Toggle Web Interface", curses.color_pair(3))
+        stdscr.addstr(18, 0, "q. Quit", curses.color_pair(3))
+        
+        stdscr.addstr(20, 0, "Please select an option >> ")
+        
+        stdscr.refresh()
+
+        key = stdscr.getch()
+        if key == ord('1'):
+            add_user(stdscr)
+        elif key == ord('3'):
+            remove_user(stdscr)
+        elif key == ord('4'):
+            rfid_enabled = not rfid_enabled
+        elif key == ord('5'):
+            web_enabled = not web_enabled
+        elif key == ord('q'):
+            break
+
+curses.wrapper(main_menu)
