@@ -221,9 +221,9 @@ def main_menu(stdscr):
         stdscr.addstr(16, 0, "4. Toggle RFID Scanner", curses.color_pair(3))
         stdscr.addstr(17, 0, "5. Toggle Web Interface", curses.color_pair(3))
         stdscr.addstr(18, 0, "6. Display Thread Log", curses.color_pair(3))
-        stdscr.addstr(18, 0, "q. Quit", curses.color_pair(3))
+        stdscr.addstr(19, 0, "q. Quit", curses.color_pair(3))
         
-        stdscr.addstr(20, 0, "Please select an option >> ")
+        stdscr.addstr(21, 0, "Please select an option >> ")
         
         stdscr.refresh()
 
