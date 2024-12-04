@@ -1,3 +1,6 @@
 boto3
 pymongo
 python-dotenv
+RPi.GPIO
+picamera
+smbus2
