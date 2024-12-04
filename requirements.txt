@@ -1,0 +1,3 @@
+boto3
+pymongo
+python-dotenv
