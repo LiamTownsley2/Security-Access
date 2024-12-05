@@ -54,7 +54,7 @@ def start_reader():
             camera = Camera()
 
             if is_valid:
-                thread = threading.Thread(target=record_and_upload, args=(5, user['UserID']))
+                thread = threading.Thread(target=record_and_upload, args=(camera, 5, user['UserID']))
                 thread.start()
                 
                 DynamoDB.register_entry(str(id), user['UserID'])
@@ -63,7 +63,7 @@ def start_reader():
                 green_led = GPIO_Pin(12) # The Green LED represents unlocking the door.
                 green_led.enable(3)
             else:
-                thread = threading.Thread(target=record_and_upload, args=(5, None))
+                thread = threading.Thread(target=record_and_upload, args=(camera, 5, None))
                 thread.start()
     except Exception as e:
         thread_logger.error(e)
