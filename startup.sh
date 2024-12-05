@@ -10,7 +10,7 @@ source venv/bin/activate
 
 if [ -f "requirements.txt" ]; then
     echo "Installing dependencies..."
-    pip install -r requirements.txt
+    pip install --upgrade --upgrade-strategy only-if-needed -r requirements.txt
 else
     echo "requirements.txt not found."
 fi
