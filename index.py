@@ -7,7 +7,7 @@ import threading
 import logging
 import Util
 import time
-import traceback
+import os
 
 from queue import Queue
 from Classes.RFID_Reader import RFID_Reader
@@ -37,6 +37,7 @@ def record_and_upload(seconds:int, id = None):
     file_name = camera.start_recording(seconds, id)
     segmentation_path = id if id is not None else "non-identified"
     upload_url = S3.upload_to_s3(file_name, "cmp408-cctv-recordings", f"cctv-footage/{segmentation_path}/{file_name}")
+    os.remove(file_name)
     return upload_url
 
 def start_reader():
