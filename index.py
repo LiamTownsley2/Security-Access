@@ -16,6 +16,7 @@ from Classes.GPIO_Pin import GPIO_Pin
 from Classes.Camera import Camera
 
 Util.initialise_gpio_pins()
+camera = Camera()
 
 thread_logger_file_name = "thread_reader.log"
 thread_logger = logging.getLogger("ThreadLogger")
@@ -32,7 +33,8 @@ def validate_key(user, text):
     if not text == "secret": return False
     return True
 
-def record_and_upload(camera, seconds:int, id = None):
+def record_and_upload(seconds:int, id = None):
+    global camera
     file_name = camera.start_recording(seconds, id)
     segmentation_path = id if id is not None else "non-identified"
     upload_url = S3.upload_to_s3(file_name, "cmp408-cctv-recordings", f"cctv-footage/{segmentation_path}/{file_name}")
@@ -51,10 +53,8 @@ def start_reader():
             thread_logger.info(f"Key Valid: {is_valid}")
             thread_logger.info(f"*{'VALID' if is_valid else 'INVALID'} TAG READ* | ID: {id} | Text: '{text}'")
             
-            camera = Camera()
-
             if is_valid:
-                thread = threading.Thread(target=record_and_upload, args=(camera, 5, user['UserID']))
+                thread = threading.Thread(target=record_and_upload, args=(5, user['UserID']))
                 thread.start()
                 
                 DynamoDB.register_entry(str(id), user['UserID'])
@@ -63,7 +63,7 @@ def start_reader():
                 green_led = GPIO_Pin(12) # The Green LED represents unlocking the door.
                 green_led.enable(3)
             else:
-                thread = threading.Thread(target=record_and_upload, args=(camera, 5, None))
+                thread = threading.Thread(target=record_and_upload, args=(5, None))
                 thread.start()
     except Exception as e:
         thread_logger.error(e)
