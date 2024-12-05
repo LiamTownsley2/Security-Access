@@ -54,8 +54,8 @@ def start_reader():
             thread_logger.info(f"*{'VALID' if is_valid else 'INVALID'} TAG READ* | ID: {id} | Text: '{text}'")
             
             if is_valid:
-                thread = threading.Thread(target=record_and_upload, args=(5, user['UserID']))
-                thread.start()
+                # thread = threading.Thread(target=record_and_upload, args=(5, user['UserID']))
+                # thread.start()
                 
                 DynamoDB.register_entry(str(id), user['UserID'])
                 entries = DynamoDB.get_entries_count(user['UserID'])
