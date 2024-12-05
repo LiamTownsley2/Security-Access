@@ -32,6 +32,13 @@ def validate_key(user, text):
     if not text == "secret": return False
     return True
 
+def record_and_upload(seconds:int, id = None):
+    camera = Camera()
+    file_name = camera.start_recording(seconds, id)
+    segmentation_path = id if id is not None else "non-identified"
+    upload_url = S3.upload_to_s3(file_name, "cmp408-cctv-recordings", f"cctv-footage/{segmentation_path}/{file_name}")
+    return upload_url
+
 def start_reader():
     try:
         while True:
@@ -44,16 +51,18 @@ def start_reader():
             thread_logger.info(f"Key Valid: {is_valid}")
             thread_logger.info(f"*{'VALID' if is_valid else 'INVALID'} TAG READ* | ID: {id} | Text: '{text}'")
             if is_valid:
+                
+                thread = threading.Thread(target=record_and_upload, args=(5, user['UserID']))
+                thread.start()
+                
                 DynamoDB.register_entry(str(id), user['UserID'])
                 entries = DynamoDB.get_entries_count(user['UserID'])
                 thread_logger.info(f"You have entered this building {entries} time(s) before.")
                 green_led = GPIO_Pin(12) # The Green LED represents unlocking the door.
                 green_led.enable(3)
             else:
-                camera = Camera()
-                file_name = camera.start_recording(id, 5)
-                upload_url = S3.upload_to_s3(file_name, "cmp408-cctv-recordings", f"cctv-footage/{file_name}")
-                thread_logger.info(f"S3 Upload Link: {upload_url}")
+                thread = threading.Thread(target=record_and_upload, args=(5))
+                thread.start()
     except Exception as e:
         thread_logger.error(e)
 
