@@ -26,6 +26,7 @@ thread_logger.addHandler(thread_file_handler)
 
 rfid_reader = RFID_Reader(thread_logger)
 log_queue = Queue()
+camera = Camera()
 
 def validate_key(user, text):
     if not user: return False
@@ -33,7 +34,6 @@ def validate_key(user, text):
     return True
 
 def record_and_upload(seconds:int, id = None):
-    camera = Camera()
     file_name = camera.start_recording(seconds, id)
     segmentation_path = id if id is not None else "non-identified"
     upload_url = S3.upload_to_s3(file_name, "cmp408-cctv-recordings", f"cctv-footage/{segmentation_path}/{file_name}")
@@ -53,8 +53,7 @@ def start_reader():
             thread_logger.info(f"*{'VALID' if is_valid else 'INVALID'} TAG READ* | ID: {id} | Text: '{text}'")
             
             if is_valid:
-                # thread = threading.Thread(target=record_and_upload, args=(5, user['UserID']))
-                # thread.start()
+                record_and_upload(5, user['UserID'])
                 
                 DynamoDB.register_entry(str(id), user['UserID'])
                 entries = DynamoDB.get_entries_count(user['UserID'])
@@ -62,8 +61,8 @@ def start_reader():
                 green_led = GPIO_Pin(12) # The Green LED represents unlocking the door.
                 green_led.enable(3)
             else:
-                thread = threading.Thread(target=record_and_upload, args=(5, None))
-                thread.start()
+                record_and_upload(5)
+
     except Exception as e:
         thread_logger.error(e)
 
