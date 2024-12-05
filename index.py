@@ -32,8 +32,7 @@ def validate_key(user, text):
     if not text == "secret": return False
     return True
 
-def record_and_upload(seconds:int, id = None):
-    camera = Camera()
+def record_and_upload(camera, seconds:int, id = None):
     file_name = camera.start_recording(seconds, id)
     segmentation_path = id if id is not None else "non-identified"
     upload_url = S3.upload_to_s3(file_name, "cmp408-cctv-recordings", f"cctv-footage/{segmentation_path}/{file_name}")
@@ -51,6 +50,9 @@ def start_reader():
             is_valid = validate_key(user, text)
             thread_logger.info(f"Key Valid: {is_valid}")
             thread_logger.info(f"*{'VALID' if is_valid else 'INVALID'} TAG READ* | ID: {id} | Text: '{text}'")
+            
+            camera = Camera()
+
             if is_valid:
                 thread = threading.Thread(target=record_and_upload, args=(5, user['UserID']))
                 thread.start()
