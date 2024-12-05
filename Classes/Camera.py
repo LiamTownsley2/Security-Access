@@ -9,6 +9,8 @@ class Camera:
         self.is_recording = False
         
     def start_recording(self, seconds:int, user_id:str = None):       
+        if self.is_recording:
+            raise Exception("Camera is already recording")
         file_name = datetime.datetime.now(datetime.timezone.utc).isoformat() if user_id else user_id
         file_name = f"{file_name}.h264"
         self.is_recording = True
