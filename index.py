@@ -16,7 +16,6 @@ from Classes.GPIO_Pin import GPIO_Pin
 from Classes.Camera import Camera
 
 Util.initialise_gpio_pins()
-camera = Camera()
 
 thread_logger_file_name = "thread_reader.log"
 thread_logger = logging.getLogger("ThreadLogger")
@@ -34,7 +33,7 @@ def validate_key(user, text):
     return True
 
 def record_and_upload(seconds:int, id = None):
-    global camera
+    camera = Camera()
     file_name = camera.start_recording(seconds, id)
     segmentation_path = id if id is not None else "non-identified"
     upload_url = S3.upload_to_s3(file_name, "cmp408-cctv-recordings", f"cctv-footage/{segmentation_path}/{file_name}")
