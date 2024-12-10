@@ -5,7 +5,8 @@ from ..db import users_table, access_log_table, thread_logger, get_user
 import os
 
 def get_all_logs(user_id:str = None):
-    thread_logger.info(f"Attempting to retrieve logs {" for {user_id}." if user_id else None}")
+    thread_logger.info(f"Attempting to retrieve logs.")
+    if user_id: thread_logger.info(f"\tSpecified User ID: {user_id}")
     FilterExpression = "UserID = :user_id" if user_id else None
     ExpressionAttributeValues= {":user_id": user_id} if user_id else None
     
