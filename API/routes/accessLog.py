@@ -17,7 +17,7 @@ def read_logs():
 def read_logs_by_employee(user_id):
     try:
         response = db.get_all_logs(user_id)
-        if response is None:
+        if response is None or len(response) == 0:
             abort(404, description="No logs found.")
         return jsonify(response), 200
     except Exception as e:
