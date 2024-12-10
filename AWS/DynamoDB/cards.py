@@ -10,23 +10,18 @@ def register_card_to_user(user_id: str, card_id: str):
         return True
     return False
 
-def get_user_by_card(card_id: str):
+def get_user_by_card(card_id: str, get_all=False):
     response = users_table.scan(
         FilterExpression="CardID = :card_id",
         ExpressionAttributeValues={":card_id": card_id}
     )
     items = response.get('Items', [])
+    if get_all:
+        return items
     return items[0] if items else None
 
-def get_users_by_card(card_id: str):
-    response = users_table.scan(
-        FilterExpression="CardID = :card_id",
-        ExpressionAttributeValues={":card_id": card_id}
-    )
-    return response.get('Items', [])
-
 def remove_all_links_to_card(card_id: str):
-    users = get_users_by_card(card_id)
+    users = get_user_by_card(card_id, get_all=True)
     for user in users:
         user['CardID'] = None
         users_table.put_item(Item=user)
