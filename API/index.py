@@ -5,7 +5,7 @@ app = Flask(__name__)
 test_data = ["Alpha", "Bravo", "Charlie"]
 
 def initialize_api():
-    app.run('127.0.0.1', debug=False, use_reloader=False)
+    app.run('0.0.0.0', debug=False, use_reloader=False)
 
 @app.route("/")
 def hello_world():
