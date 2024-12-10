@@ -8,7 +8,7 @@ def create_user():
     data = request.get_json()
     try:
         response = db.register_user(data['name'])
-        return jsonify({"message": "User created.", "response": response}), 201
+        return jsonify({"message": "User created.", "user_id": response}), 201
     except Exception as e:
         return jsonify({"error": str(e)}), 400
 
