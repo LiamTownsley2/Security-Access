@@ -2,6 +2,7 @@ import datetime
 from typing import Optional
 from Util import generate_unique_id
 from ..db import users_table, access_log_table, thread_logger, get_user
+import os
 
 def get_all_logs(user_id:str = None):
     thread_logger.info(f"Attempting to retrieve logs {" for {user_id}." if user_id else None}")
@@ -13,12 +14,12 @@ def get_all_logs(user_id:str = None):
     return response.get('Items')
 
 
-def register_entry(tag_id: str, user_id: Optional[str], bucket_name: Optional[str], file_object: Optional[str]):
+def register_entry(tag_id: str, user_id: Optional[str], file_object: Optional[str]):
     entry = {
         "LogID": str(generate_unique_id()),
         "TagID": tag_id,
         "UserID": user_id,
-        "Bucket": bucket_name,
+        "Bucket": os.getenv("S3_BUCKET_NAME"),
         "FileObject": file_object,
         "Time": datetime.datetime.now(datetime.timezone.utc).isoformat()
     }

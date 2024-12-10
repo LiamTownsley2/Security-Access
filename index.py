@@ -7,11 +7,10 @@ import threading
 import logging
 import Util
 import time
-import os
 
 from queue import Queue
 from Classes.RFID_Reader import RFID_Reader
-from AWS import S3, db
+from AWS import db
 from Classes.GPIO_Pin import GPIO_Pin
 from Classes.Camera import Camera
 from API.index import initialize_api
@@ -33,37 +32,26 @@ def validate_key(user, text):
     if not text == "secret": return False
     return True
 
-def record_and_upload(seconds:int, id = None):
-    BUCKET = "cmp408-cctv-recordings"
-    file_name = camera.start_recording(seconds)
-    segmentation_path = id if id is not None else "non-identified"
-    file_object = f"cctv-footage/{segmentation_path}/{file_name}"
-    S3.upload_to_s3(file_name, BUCKET, file_object)
-    os.remove(file_name)
-    return [BUCKET, file_object]
-
 def start_reader():
     try:
         while True:
-            thread_logger.info("start_reader() running.")
+            thread_logger.info("start_reader() | Awaiting Key Presentation")
             id, text = rfid_reader.read_key()
-            thread_logger.info(f"Card Read: ({id}) {text}")
+            thread_logger.debug(f"start_reader() | Card Read Event -> (Tag ID: {id}) {text}")
             user = db.get_user_by_card(str(id))
-            thread_logger.info(f"\t {user}")
             is_valid = validate_key(user, text)
-            thread_logger.info(f"Key Valid: {is_valid}")
             thread_logger.info(f"*{'VALID' if is_valid else 'INVALID'} TAG READ* | ID: {id} | Text: '{text}'")
             
             if is_valid:
-                bucket, file_object = record_and_upload(5, user['UserID'])
+                bucket, file_object = camera.record_and_upload(5, user['UserID'])
                 
                 db.register_entry(str(id), user['UserID'], bucket, file_object)
                 entries = db.get_entries_count(user['UserID'])
-                thread_logger.info(f"You have entered this building {entries} time(s) before.")
+                thread_logger.info(f"This employee has entered this building {entries} time(s) before.")
                 green_led = GPIO_Pin(12) # The Green LED represents unlocking the door.
                 green_led.enable(3)
             else:
-                record_and_upload(5)
+                camera.record_and_upload(5)
 
     except Exception as e:
         thread_logger.error(e)
