@@ -1,6 +1,6 @@
 import logging
 
-from flask import Flask
+from flask import Flask, jsonify
 from routes import accessLog, camera, card, user
 
 app = Flask(__name__)
@@ -18,4 +18,4 @@ def initialize_api():
 
 @app.route("/")
 def hello_world():
-    return "<p>Hello, World!</p>"
+    return jsonify("Hello World"), 200
