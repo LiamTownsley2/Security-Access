@@ -161,6 +161,9 @@ def watch_log_file(file_path, log_queue):
                 log_queue.put(line)
             else:
                 time.sleep(0.1)
+                
+def repeat(word, n):
+    return (f"{word} "*n)[:-1]
 
 def view_rfid_logs(stdscr, log_queue):
     curses.curs_set(0)
@@ -217,14 +220,14 @@ def main_menu(stdscr):
         stdscr.addstr(4, 0, "/_/ |_/_/   /___/_____/   /____/\____/_/  |_/_/ |_/_/ |_/_____/_/ |_|", curses.color_pair(1))
         
         stdscr.addstr(6, 0, "Welcome to the Command Line Interface.", curses.A_UNDERLINE)
-        stdscr.addstr(8,0,"Interface Status:                                ", curses.color_pair(1) | curses.A_BOLD)
-        stdscr.addstr(9, 0, "RFID Scanning Interface:                         ", curses.color_pair(1) | curses.A_BOLD)
+        stdscr.addstr(8,0,"Interface Status:" + repeat(" ", 32), curses.color_pair(1) | curses.A_BOLD)
+        stdscr.addstr(9, 0, "RFID Scanning Interface:" + repeat(" ", 25), curses.color_pair(1) | curses.A_BOLD)
         if rfid_enabled:
             stdscr.addstr(9, 25, f"Working and Operational", curses.color_pair(2))
         else:
             stdscr.addstr(9, 25, f"Disabled", curses.color_pair(1))
         
-        stdscr.addstr(10, 0, "Web Interface:                                   ", curses.color_pair(1) | curses.A_BOLD)
+        stdscr.addstr(10, 0, "Web Interface:" + repeat(" ", 35), curses.color_pair(1) | curses.A_BOLD)
         if web_enabled:
             stdscr.addstr(10, 15, f"Working and Operational", curses.color_pair(2))
         else:
