@@ -6,19 +6,15 @@ import os
 
 def get_all_logs(user_id: str = None):
     thread_logger.info("Attempting to retrieve logs.")
-    
+    response = None
     if user_id:
         thread_logger.info(f"\tSpecified User ID: {user_id}")
-        FilterExpression = "UserID = :user_id"
-        ExpressionAttributeValues = {":user_id": str(user_id)}
+        response = access_log_table.scan(
+            FilterExpression="UserID = :user_id", 
+            ExpressionAttributeValues={":user_id": str(user_id)}
+        )
     else:
-        FilterExpression = None
-        ExpressionAttributeValues = None
-    
-    response = access_log_table.scan(
-        FilterExpression=FilterExpression, 
-        ExpressionAttributeValues=ExpressionAttributeValues
-    )
+        response = access_log_table.scan()
     
     thread_logger.info(f"Get_All_Logs RESPONSE ->>>> {response.get('Items')}")
     return response.get('Items', [])
