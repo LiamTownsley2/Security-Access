@@ -5,7 +5,7 @@ def register_user(name: str):
     user_id = generate_unique_id()
     users_table.put_item(
         Item={
-            "UserID": user_id,
+            "UserID": str(user_id),
             "Name": name,
         }
     )
@@ -13,13 +13,13 @@ def register_user(name: str):
 
 def delete_user(user_id: str):
     response = users_table.delete_item(
-        Key={"UserID": user_id}
+        Key={"UserID": str(user_id)}
     )
     return response.get('ResponseMetadata', {}).get('HTTPStatusCode') == 200
 
 def get_user(user_id: str):
     thread_logger.info(f"Attempting to retrieve user with UserID: {user_id}")
-    response = users_table.get_item(Key={"UserID": user_id})
+    response = users_table.get_item(Key={"UserID": str(user_id)})
     thread_logger.info(f"Get_User RESPONSE ->>>> {response.get('Item')}")
     return response.get('Item')
 
@@ -56,7 +56,7 @@ def edit_user(user_id: str, name: str = None, card_id: str = None, last_scanned:
         return None
     
     response = users_table.update_item(
-            Key={"UserID": user_id},
+            Key={"UserID": str(user_id)},
             UpdateExpression=update_expression,
             ExpressionAttributeValues=expression_values,
             ReturnValues="ALL_NEW"
