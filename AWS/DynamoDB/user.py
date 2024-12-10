@@ -32,6 +32,43 @@ def get_user(user_id: str):
     thread_logger.info(f"Get_User RESPONSE ->>>> {response.get('Item')}")
     return response.get('Item')
 
+def edit_user(user_id: str, name: str = None, card_id: str = None, last_scanned: str = None):
+    existing_user = get_user(user_id)
+    if not existing_user:
+        thread_logger.warning(f"User with UserID: {user_id} not found.")
+        return None
+    
+    update_expression = "set"
+    expression_values = {}
+    
+    if name:
+        update_expression += " Name = :name,"
+        expression_values[":name"] = name
+    
+    if card_id:
+        update_expression += " CardID = :card_id,"
+        expression_values[":card_id"] = card_id
+    
+    if last_scanned:
+        update_expression += " LastScanned = :last_scanned,"
+        expression_values[":last_scanned"] = last_scanned
+    
+    update_expression = update_expression.rstrip(",")
+    if not expression_values:
+        thread_logger.warning("No fields to update.")
+        return None
+    
+    response = users_table.update_item(
+            Key={"UserID": user_id},
+            UpdateExpression=update_expression,
+            ExpressionAttributeValues=expression_values,
+            ReturnValues="ALL_NEW"
+        )
+    
+    updated_item = response.get("Attributes")
+    thread_logger.info(f"Edit_User RESPONSE ->>>> {updated_item}")
+    return updated_item
+    
 def get_all_users():
     thread_logger.info("Attempting to retrieve all users.")
     response = users_table.scan()
