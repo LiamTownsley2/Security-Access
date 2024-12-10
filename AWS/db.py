@@ -8,19 +8,24 @@ access_log_table = dynamodb.Table('AccessLog')
 
 thread_logger = logging.getLogger("ThreadLogger")
 
-from .DynamoDB.user import get_user, get_entries_count, delete_user,generate_unique_id, register_entry,register_user
+from .DynamoDB.user import get_user, get_entries_count, delete_user,generate_unique_id, register_entry,register_user, get_all_users
 from .DynamoDB.cards import get_user_by_card, get_users_by_card, register_card_to_user, remove_all_links_to_card
 
 __all__ = [
     "dynamodb",
     "users_table",
     "access_log_table",
+    
+    # user
     "get_user",
     "get_entries_count",
     "delete_user",
     "generate_unique_id",
     "register_entry",
     "register_user",
+    "get_all_users",
+    
+    # Cards
     "get_user_by_card",
     "get_users_by_card",
     "register_card_to_user",

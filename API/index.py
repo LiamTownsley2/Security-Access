@@ -1,6 +1,7 @@
 from flask import Flask, jsonify, request, abort
 import logging
-import os 
+import os
+from ..AWS import db 
 app = Flask(__name__)
 
 # disable flask logging
@@ -17,7 +18,7 @@ def hello_world():
 
 @app.route('/users', methods=['GET'])
 def get_users():
-    return jsonify(list(test_data)), 200
+    return jsonify(list(db.get_all_users())), 200
 
 @app.route('/users/<int:user_id>', methods=['GET'])
 def get_user(user_id):

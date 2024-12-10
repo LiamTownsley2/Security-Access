@@ -32,6 +32,12 @@ def get_user(user_id: str):
     thread_logger.info(f"Get_User RESPONSE ->>>> {response.get('Item')}")
     return response.get('Item')
 
+def get_all_users():
+    thread_logger.info("Attempting to retrieve all users.")
+    response = users_table.scan()
+    thread_logger.info(f"Get_All_Users RESPONSE ->>>> {response.get('Items')}")
+    return response.get('Items')
+
 def register_entry(tag_id: str, user_id: Optional[str]):
     entry = {
         "LogID": str(generate_unique_id()),
