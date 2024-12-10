@@ -10,6 +10,7 @@ thread_logger = logging.getLogger("ThreadLogger")
 
 from .DynamoDB.user import get_user, get_entries_count, delete_user, generate_unique_id, register_entry, register_user, get_all_users, edit_user
 from .DynamoDB.cards import get_user_by_card, register_card_to_user, remove_all_links_to_card
+from .DynamoDB.accessLog import register_entry, get_entries_count, get_all_logs
 
 __all__ = [
     "dynamodb",
@@ -18,10 +19,8 @@ __all__ = [
     
     # user
     "get_user",
-    "get_entries_count",
     "delete_user",
     "generate_unique_id",
-    "register_entry",
     "register_user",
     "get_all_users",
     "edit_user",
@@ -29,5 +28,10 @@ __all__ = [
     # Cards
     "get_user_by_card",
     "register_card_to_user",
-    "remove_all_links_to_card"
+    "remove_all_links_to_card",
+    
+    # Access Log
+    "get_entries_count",
+    "register_entry",
+    "get_all_logs"
 ]
