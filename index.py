@@ -11,7 +11,7 @@ import os
 
 from queue import Queue
 from Classes.RFID_Reader import RFID_Reader
-from AWS import DynamoDB, S3
+from AWS import S3, db
 from Classes.GPIO_Pin import GPIO_Pin
 from Classes.Camera import Camera
 
@@ -46,7 +46,7 @@ def start_reader():
             thread_logger.info("start_reader() running.")
             id, text = rfid_reader.read_key()
             thread_logger.info(f"Card Read: ({id}) {text}")
-            user = DynamoDB.get_user_by_card(str(id))
+            user = db.get_user_by_card(str(id))
             thread_logger.info(f"\t {user}")
             is_valid = validate_key(user, text)
             thread_logger.info(f"Key Valid: {is_valid}")
@@ -55,8 +55,8 @@ def start_reader():
             if is_valid:
                 record_and_upload(5, user['UserID'])
                 
-                DynamoDB.register_entry(str(id), user['UserID'])
-                entries = DynamoDB.get_entries_count(user['UserID'])
+                db.register_entry(str(id), user['UserID'])
+                entries = db.get_entries_count(user['UserID'])
                 thread_logger.info(f"You have entered this building {entries} time(s) before.")
                 green_led = GPIO_Pin(12) # The Green LED represents unlocking the door.
                 green_led.enable(3)
@@ -86,7 +86,7 @@ def add_user(stdscr):
             break
         
         try:
-            user = DynamoDB.register_user(employee_name)
+            user = db.register_user(employee_name)
             stdscr.clear()
             stdscr.addstr(0, 0, "Would you like to register a keycard at this time? (Y/n): ")
             stdscr.refresh()
@@ -115,7 +115,7 @@ def remove_user(stdscr):
             break
         
         try:
-            DynamoDB.delete_user(employee_id)
+            db.delete_user(employee_id)
             send_simple_notification(stdscr, f"User '{employee_id}' removed successfully!", 2000)
         except:
             send_simple_notification(stdscr, f"There was an issue whilst deleting '{employee_id}'! Please try again.", 2000)
@@ -136,16 +136,16 @@ def register_keycard(stdscr, employee_id=None):
                 break
         
         try:
-            user = DynamoDB.get_user(employee_id)
+            user = db.get_user(employee_id)
             stdscr.addstr(2, 0, "Awaiting Key Presentation..........")
             stdscr.refresh()
 
             id, _ = rfid_reader.read_key()
-            users_holding_card = DynamoDB.get_users_by_card(str(id))
+            users_holding_card = db.get_users_by_card(str(id))
             if len(users_holding_card) > 0:
-                DynamoDB.remove_all_links_to_card(id)
+                db.remove_all_links_to_card(id)
                 
-            DynamoDB.register_card_to_user(employee_id, str(id))
+            db.register_card_to_user(employee_id, str(id))
             
             send_simple_notification(stdscr, f"User '{employee_id}' has had their Keycard Registered successfully!", 2000)
         except:
