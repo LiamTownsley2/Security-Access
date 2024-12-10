@@ -4,3 +4,4 @@ RPi.GPIO
 picamera
 smbus2
 mfrc522
+Flask
