@@ -39,7 +39,7 @@ def edit_user(user_id: str, name: str = None, card_id: str = None, last_scanned:
     expression_values = {}
     
     if name:
-        update_expression += " Name = :name,"
+        update_expression += " #UserName = :name,"
         expression_values[":name"] = name
     
     if card_id:
@@ -58,6 +58,9 @@ def edit_user(user_id: str, name: str = None, card_id: str = None, last_scanned:
     response = users_table.update_item(
             Key={"UserID": str(user_id)},
             UpdateExpression=update_expression,
+            ExpressionAttributeNames={
+                "#UserName": "Name" # remap restricted name: 'Name'
+            },
             ExpressionAttributeValues=expression_values,
             ReturnValues="ALL_NEW"
         )
