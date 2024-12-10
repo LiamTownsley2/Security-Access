@@ -29,9 +29,9 @@ def edit_user(user_id):
     user = db.get_user(user_id)
     if user is None:
         abort(404, description="User not found")
-    name = data['name'] if data['name'] else None
-    card_id = data['card_id'] if data['card_id'] else None
-    last_scanned = data['last_scanned'] if data['last_scanned'] else None
+    name = data.get("name")
+    card_id = data.get("card_id")
+    last_scanned = data.get('last_scanned')
     edited_user = db.edit_user(user_id, name, card_id, last_scanned)
     return jsonify(edited_user), 200
 
