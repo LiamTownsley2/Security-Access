@@ -1,6 +1,11 @@
 from flask import Flask, jsonify, request, abort
+import logging
 
 app = Flask(__name__)
+
+log = logging.getLogger('werkzeug') # default flask logger
+log.disabled = True
+app.logger.disabled = True
 
 test_data = ["Alpha", "Bravo", "Charlie"]
 
