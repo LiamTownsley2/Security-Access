@@ -1,9 +1,9 @@
 from flask import Blueprint, jsonify, request, abort
 from AWS import db 
 
-bp_user = Blueprint('users', __name__)
+bp_user = Blueprint('user', __name__, url_prefix='/user')
 
-@bp_user.route('/user', methods=['POST'])
+@bp_user.route('/', methods=['POST'])
 def create_user():
     data = request.get_json()
     try:
@@ -12,18 +12,18 @@ def create_user():
     except Exception as e:
         return jsonify({"error": str(e)}), 400
 
-@bp_user.route('/user', methods=['GET'])
+@bp_user.route('/', methods=['GET'])
 def get_users():
     return jsonify(list(db.get_all_users())), 200
 
-@bp_user.route('/user/<int:user_id>', methods=['GET'])
+@bp_user.route('/<int:user_id>', methods=['GET'])
 def get_user(user_id):
     user = db.get_user(user_id)
     if user is None:
         abort(404, description="User not found")
     return jsonify(user), 200
 
-@bp_user.route('/user/<int:user_id>', methods=['PUT'])
+@bp_user.route('/<int:user_id>', methods=['PUT'])
 def edit_user(user_id):
     data = request.get_json()
     user = db.get_user(user_id)
@@ -35,7 +35,7 @@ def edit_user(user_id):
     edited_user = db.edit_user(user_id, name, card_id, last_scanned)
     return jsonify(edited_user), 200
 
-@bp_user.route('/user/<int:user_id>', methods=['DELETE'])
+@bp_user.route('/<int:user_id>', methods=['DELETE'])
 def delete_user(user_id):
     user = db.delete_user(user_id)
     if user is None:
