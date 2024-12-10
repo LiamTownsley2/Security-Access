@@ -19,7 +19,7 @@ def get_all_logs(user_id: str = None):
     thread_logger.info(f"Get_All_Logs RESPONSE ->>>> {response.get('Items')}")
     return response.get('Items', [])
 
-def register_entry(tag_id: str, user_id: Optional[str], file_object: Optional[str]):
+def register_entry(tag_id: str, user_id:str = None, file_object:str = None):
     entry = {
         "LogID": str(generate_unique_id()),
         "TagID": str(tag_id),
