@@ -1,4 +1,4 @@
-from user import get_user
+from .user import get_user
 from ..db import users_table, access_log_table, thread_logger
 
 def register_card_to_user(user_id: str, card_id: str):
