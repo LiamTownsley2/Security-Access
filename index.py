@@ -34,11 +34,13 @@ def validate_key(user, text):
     return True
 
 def record_and_upload(seconds:int, id = None):
+    BUCKET = "cmp408-cctv-recordings"
     file_name = camera.start_recording(seconds)
     segmentation_path = id if id is not None else "non-identified"
-    upload_url = S3.upload_to_s3(file_name, "cmp408-cctv-recordings", f"cctv-footage/{segmentation_path}/{file_name}")
+    file_object = f"cctv-footage/{segmentation_path}/{file_name}"
+    upload_url = S3.upload_to_s3(file_name, BUCKET, file_object)
     os.remove(file_name)
-    return upload_url
+    return [BUCKET, file_object]
 
 def start_reader():
     try:
@@ -53,9 +55,9 @@ def start_reader():
             thread_logger.info(f"*{'VALID' if is_valid else 'INVALID'} TAG READ* | ID: {id} | Text: '{text}'")
             
             if is_valid:
-                record_and_upload(5, user['UserID'])
+                bucket, file_object = record_and_upload(5, user['UserID'])
                 
-                db.register_entry(str(id), user['UserID'])
+                db.register_entry(str(id), user['UserID'], bucket, file_object)
                 entries = db.get_entries_count(user['UserID'])
                 thread_logger.info(f"You have entered this building {entries} time(s) before.")
                 green_led = GPIO_Pin(12) # The Green LED represents unlocking the door.
