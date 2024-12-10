@@ -1,7 +1,7 @@
 from flask import Flask, jsonify, request, abort
 import logging
 import os
-from ..AWS import db 
+from AWS import db 
 app = Flask(__name__)
 
 # disable flask logging
