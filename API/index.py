@@ -5,7 +5,6 @@ app = Flask(__name__)
 
 # disable flask logging
 logging.getLogger('werkzeug').disabled = True
-os.environ['WERKZEUG_RUN_MAIN'] = 'true'
 
 test_data = ["Alpha", "Bravo", "Charlie"]
 
