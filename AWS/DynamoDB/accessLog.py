@@ -9,8 +9,6 @@ def get_all_logs(user_id: str = None):
     
     if user_id:
         thread_logger.info(f"\tSpecified User ID: {user_id}")
-    
-    if user_id:
         FilterExpression = "UserID = :user_id"
         ExpressionAttributeValues = {":user_id": str(user_id)}
     else:
