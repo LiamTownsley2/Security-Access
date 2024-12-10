@@ -14,7 +14,7 @@ from Classes.RFID_Reader import RFID_Reader
 from AWS import S3, db
 from Classes.GPIO_Pin import GPIO_Pin
 from Classes.Camera import Camera
-
+from API.index import initialize_api
 Util.initialise_gpio_pins()
 
 thread_logger_file_name = "thread_reader.log"
@@ -196,8 +196,11 @@ def main_menu(stdscr):
     rfid_enabled = False
     web_enabled = False
 
-    log_thread = threading.Thread(target=watch_log_file, args=(thread_logger_file_name, log_queue), daemon=True)
+    log_thread = threading.Thread(target=watch_log_file, args=(thread_logger_file_name, log_queue), daemon=False)
     log_thread.start()
+    
+    api_thread = threading.Thread(target=initialize_api, daemon=False)
+    api_thread.start()
     
     curses.start_color()
     curses.init_pair(1, curses.COLOR_RED, curses.COLOR_BLACK)
