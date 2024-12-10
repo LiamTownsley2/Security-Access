@@ -1,7 +1,7 @@
 import logging
 
 from flask import Flask, jsonify
-from routes import accessLog, camera, card, user
+from .routes import accessLog, camera, card, user
 
 app = Flask(__name__)
 
