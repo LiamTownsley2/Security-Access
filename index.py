@@ -45,7 +45,7 @@ def start_reader():
             if is_valid:
                 bucket, file_object = camera.record_and_upload(5, user['UserID'])
                 
-                db.register_entry(str(id), user['UserID'], bucket, file_object)
+                db.register_entry(str(id), user['UserID'], file_object)
                 entries = db.get_entries_count(user['UserID'])
                 thread_logger.info(f"This employee has entered this building {entries} time(s) before.")
                 green_led = GPIO_Pin(12) # The Green LED represents unlocking the door.
