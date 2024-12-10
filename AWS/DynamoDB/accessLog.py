@@ -18,10 +18,10 @@ def get_all_logs(user_id:str = None):
 def register_entry(tag_id: str, user_id: Optional[str], file_object: Optional[str]):
     entry = {
         "LogID": str(generate_unique_id()),
-        "TagID": tag_id,
-        "UserID": user_id,
+        "TagID": str(tag_id),
+        "UserID": str(user_id),
         "Bucket": os.getenv("S3_BUCKET_NAME"),
-        "FileObject": file_object,
+        "FileObject": str(file_object),
         "Time": datetime.datetime.now(datetime.timezone.utc).isoformat()
     }
     access_log_table.put_item(Item=entry)
