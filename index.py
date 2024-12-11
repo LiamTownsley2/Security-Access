@@ -234,7 +234,10 @@ def main_menu(stdscr):
         stdscr.addstr(19, 0, "q. Quit", curses.color_pair(3))
         
         stdscr.addstr(21, 0, "Please select an option >> ")
-        
+        stdscr.addstr(22, 0, "")
+        stdscr.addstr(23, 0, "")
+        stdscr.addstr(24, 0, "")
+        stdscr.addstr(25, 0, "")        
         stdscr.refresh()
         time.sleep(1)
         stdscr.refresh()
