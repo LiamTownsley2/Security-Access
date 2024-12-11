@@ -8,4 +8,9 @@ def upload_to_s3(file_name, object_name):
     return os.getenv("S3_BUCKET_NAME"), object_name
 
 def get_videos_by_folder(directory_name):
-    return s3.list_objects_v2(Bucket=os.getenv("S3_BUCKET_NAME"), Prefix=f"{directory_name}/")
+    response = s3.list_objects_v2(Bucket=os.getenv("S3_BUCKET_NAME"))
+    if 'Contents' in response:
+        return [obj['Key'] for obj in response['Contents']]
+    else:
+        print("No files found.")
+        return []
