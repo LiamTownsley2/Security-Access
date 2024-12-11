@@ -236,6 +236,9 @@ def main_menu(stdscr):
         stdscr.addstr(21, 0, "Please select an option >> ")
         
         stdscr.refresh()
+        time.sleep(1)
+        stdscr.refresh()
+
 
         key = stdscr.getch()
         if key == ord('1'):
