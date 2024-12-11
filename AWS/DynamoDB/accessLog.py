@@ -1,6 +1,5 @@
 import datetime
-from typing import Optional
-from Util import generate_unique_id
+from Util.general import generate_unique_id
 from ..db import users_table, access_log_table, thread_logger, get_user
 import os
 
