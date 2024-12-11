@@ -8,6 +8,16 @@ app = Flask(__name__)
 # disable flask logging
 # logging.getLogger('werkzeug').disabled = True
 
+logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s - %(threadName)s - %(levelname)s - %(message)s",
+        handlers=[
+            logging.FileHandler("flask_app.log"),
+        ]
+    )
+
+app.logger.handlers = logging.getLogger().handlers
+
 app.register_blueprint(accessLog.bp_access_log)
 app.register_blueprint(camera.bp_cameras)
 app.register_blueprint(card.bp_cards)
