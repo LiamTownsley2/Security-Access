@@ -28,6 +28,6 @@ class Camera:
     def record_and_upload(self, seconds:int, id = None):
         file_name = self.start_recording(seconds)
         segmentation_path = id if id is not None else "non-identified"
-        bucket_name, file_object = S3.upload_to_s3(file_name, f"cctv-footage/{segmentation_path}/{file_name}")
+        bucket_name, file_object = S3.upload_to_s3(file_name, f"{segmentation_path}/{file_name}")
         os.remove(file_name)
         return [bucket_name, file_object]
