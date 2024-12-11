@@ -2,12 +2,13 @@ import logging
 
 from flask import Flask, jsonify
 from .routes import accessLog, camera, card, user
+import os
+os.environ["FLASK_RUN_FROM_CLI"] = "false"
 
 app = Flask(__name__)
 
 # disable flask logging
 # logging.getLogger('werkzeug').disabled = True
-
 logging.basicConfig(
         level=logging.INFO,
         format="%(asctime)s - %(threadName)s - %(levelname)s - %(message)s",
