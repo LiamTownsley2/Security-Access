@@ -1,10 +1,12 @@
 import curses
 from time import sleep
+from Util.general import log_queue
 
-def view_rfid_logs(stdscr, log_queue):
-    return curses.wrapper(_generate_page, stdscr, log_queue)
+def view_rfid_logs(stdscr):
+    return curses.wrapper(_generate_page, stdscr)
 
-def _generate_page(stdscr, log_queue):
+def _generate_page(stdscr):
+    global log_queue
     curses.curs_set(0)
     stdscr.nodelay(True)
     stdscr.clear()

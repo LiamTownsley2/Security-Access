@@ -7,7 +7,7 @@ import threading
 import logging
 import Util.general, Util.curses, Util.rfid
 
-from queue import Queue
+import MainMenu.card, MainMenu.user
 from Classes.RFID_Reader import RFID_Reader
 from AWS import db
 from Classes.Camera import Camera
@@ -22,62 +22,8 @@ thread_file_handler.setFormatter(logging.Formatter("%(asctime)s - %(levelname)s 
 thread_logger.addHandler(thread_file_handler)
 
 camera = Camera()
-rfid_reader = RFID_Reader(thread_logger)
-log_queue = Queue()
+rfid_reader = RFID_Reader(thread_logger, camera)
 
-def add_user(stdscr):
-    while True:
-        employee_name = Util.curses.ask_question(stdscr, "Enter full name of the Employee (or type 'back' to return):")
-        if employee_name.lower() == "back":
-            Util.curses.send_simple(stdscr, "Returning to the main menu...", 1000)
-            break
-
-        try:
-            user = db.register_user(employee_name)
-            if confirm_keycard_registration(stdscr):
-                register_keycard(stdscr, user)
-            Util.curses.send_simple(stdscr, f"Employee '{employee_name}' added successfully!", 2000)
-        except Exception as e:
-            Util.curses.send_simple(stdscr, f"There was an issue while adding '{employee_name}': {str(e)}", 1000)
-        break
-
-def confirm_keycard_registration(stdscr):
-    return Util.curses.ask_question(stdscr, "Would you like to register a keycard? (Y/n):").lower() in ("", "y")
-
-def remove_user(stdscr):
-    while True:
-        employee_id = Util.curses.ask_question(stdscr, "Enter the ID of the Employee that should be removed (or type 'back' to return):")
-        if employee_id.lower() == "back":
-            Util.curses.send_simple(stdscr, "Returning to the main menu...", 1000)
-            break
-        
-        try:
-            db.delete_user(employee_id)
-            Util.curses.send_simple(stdscr, f"User '{employee_id}' removed successfully!", 2000)
-        except:
-            Util.curses.send_simple(stdscr, f"There was an issue whilst deleting '{employee_id}'! Please try again.", 2000)
-        break
-    
-def register_keycard(stdscr, employee_id=None):
-    if employee_id is None:
-        employee_id = Util.curses.ask_question(stdscr, "Enter the Employee ID or type 'back' to return:")
-        if employee_id.lower() == "back":
-            Util.curses.send_simple(stdscr, "Returning to the main menu...", 1000)
-            return
-
-    try:
-        user = db.get_user(employee_id)
-        stdscr.addstr(2, 0, "Awaiting Key Presentation..........")
-        stdscr.refresh()
-
-        id, _ = rfid_reader.read_key()
-        if db.get_user_by_card(str(id), get_all=True):
-            db.remove_all_links_to_card(id)
-
-        db.register_card_to_user(employee_id, str(id))
-        Util.curses.send_simple(stdscr, f"User '{employee_id}' has had their Keycard Registered successfully!", 2000)
-    except:
-        Util.curses.send_simple(stdscr, f"Error registering keycard for '{employee_id}'.", 2000)
 
 def handle_user_interaction(stdscr, key:str, menu):
     for item in menu:
@@ -88,9 +34,9 @@ def handle_user_interaction(stdscr, key:str, menu):
 
 def main_menu(stdscr):
     menu_items = [
-        ["1", "Register an Employee", add_user],
-        ["2", "Register a Keycard", register_keycard],
-        ["3", "Revoke an Employees Access", remove_user],
+        ["1", "Register an Employee", MainMenu.user.add_user],
+        ["2", "Register a Keycard", MainMenu.card.register_keycard],
+        ["3", "Revoke an Employees Access", MainMenu.user.remove_user],
         ["4", "Toggle RFID Scanner", rfid_reader.toggle_reading],
         ["5", "Toggle Web Interface", toggle_api_status],
         ["6", "View RFID Logs", Util.rfid.view_rfid_logs],
@@ -99,7 +45,7 @@ def main_menu(stdscr):
     curses.curs_set(0)
     stdscr.clear()
     
-    log_thread = threading.Thread(target=Util.general.watch_log_file, args=(thread_logger_file_name, log_queue), daemon=False)
+    log_thread = threading.Thread(target=Util.general.watch_log_file, args=(thread_logger_file_name), daemon=False)
     log_thread.start()
     
     Util.curses.register_colours()

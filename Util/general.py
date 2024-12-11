@@ -2,6 +2,9 @@ from RPi.GPIO import cleanup, setwarnings, setmode, BCM # type: ignore
 import re
 import random
 import time
+from queue import Queue
+
+log_queue = Queue()
 
 def generate_unique_id():
     timestamp = int(time.time() * 1000)
