@@ -1,17 +1,20 @@
-from flask import Blueprint, jsonify, request, abort
+from flask import Blueprint, abort, jsonify
+
 from AWS import S3
 
-bp_cameras = Blueprint('camera', __name__, url_prefix='/camera')
+bp_cameras = Blueprint("camera", __name__, url_prefix="/camera")
 
-@bp_cameras.route('/', methods=['GET'])
+
+@bp_cameras.route("/", methods=["GET"])
 def view_camera():
     try:
         return abort(404, description="Not implemented.")
         # return jsonify(response), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 400
-    
-@bp_cameras.route('/history/unidentified', methods=['GET'])
+
+
+@bp_cameras.route("/history/unidentified", methods=["GET"])
 def view_unidentified_footage():
     try:
         response = S3.get_videos_by_folder("non-identified")
@@ -20,9 +23,9 @@ def view_unidentified_footage():
         return jsonify(response), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 400
-    
 
-@bp_cameras.route('/history/<int:user_id>', methods=['GET'])
+
+@bp_cameras.route("/history/<int:user_id>", methods=["GET"])
 def view_employee_footage(user_id):
     try:
         response = S3.get_videos_by_folder(user_id)

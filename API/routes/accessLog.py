@@ -1,9 +1,11 @@
-from flask import Blueprint, jsonify, request, abort
-from AWS import db 
+from flask import Blueprint, abort, jsonify, request
 
-bp_access_log = Blueprint('log', __name__, url_prefix='/log')
+from AWS import db
 
-@bp_access_log.route('/', methods=['GET'])
+bp_access_log = Blueprint("log", __name__, url_prefix="/log")
+
+
+@bp_access_log.route("/", methods=["GET"])
 def read_logs():
     try:
         response = db.get_all_logs()
@@ -12,8 +14,9 @@ def read_logs():
         return jsonify(response), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 400
-    
-@bp_access_log.route('/<int:user_id>', methods=['GET'])
+
+
+@bp_access_log.route("/<int:user_id>", methods=["GET"])
 def read_logs_by_employee(user_id):
     try:
         response = db.get_all_logs(user_id)
@@ -22,8 +25,9 @@ def read_logs_by_employee(user_id):
         return jsonify(response), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 400
-    
-@bp_access_log.route('/<int:user_id>', methods=['POST'])
+
+
+@bp_access_log.route("/<int:user_id>", methods=["POST"])
 def register_entry(user_id):
     data = request.get_json()
     try:

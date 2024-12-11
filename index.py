@@ -27,12 +27,14 @@ thread_logger.addHandler(thread_file_handler)
 camera = Camera()
 rfid_reader = RFID_Reader(thread_logger, camera)
 
+
 def handle_user_interaction(stdscr, key: str, menu):
     for item in menu:
         if key.lower() == item[0]:
             item[2](stdscr)
             return True
     return False
+
 
 def main_menu(stdscr):
     menu_items = [

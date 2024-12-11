@@ -1,9 +1,10 @@
-from flask import Blueprint, jsonify, request, abort
-from AWS import db 
+from flask import Blueprint, jsonify, abort
+from AWS import db
 
-bp_cards = Blueprint('card', __name__, url_prefix='/card')
+bp_cards = Blueprint("card", __name__, url_prefix="/card")
 
-@bp_cards.route('/<int:card_id>', methods=['GET'])
+
+@bp_cards.route("/<int:card_id>", methods=["GET"])
 def read_card(card_id):
     try:
         user = db.get_user_by_card(str(card_id))
