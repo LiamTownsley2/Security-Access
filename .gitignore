@@ -1,7 +1,11 @@
+# File Extensions
 *.pem
-.env
-__pycache__
 *.pyc
 *.log
+.env
+
+# Directory
 **/__pychache__
+__pycache__
+.VSCodeCounter
 venv/
