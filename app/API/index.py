@@ -1,9 +1,10 @@
 import logging
 
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 from .routes import accessLog, camera, card, user
 import os
 import multiprocessing
+from app.classes.DoorControl import door_controller
 
 os.environ["FLASK_RUN_FROM_CLI"] = "false"
 
@@ -63,3 +64,12 @@ def destroy_api():
 @app.route("/")
 def hello_world():
     return jsonify("Hello World"), 200
+
+@app.route("/lockout", methods=["POST"])
+def set_lockout():
+    data = request.get_json()
+
+    should_lockout = data.get("should_lockout") == "true"
+    door_controller.set_lockout(should_lockout)
+    
+    return jsonify({{"locked_out": str(should_lockout)}}), 200
