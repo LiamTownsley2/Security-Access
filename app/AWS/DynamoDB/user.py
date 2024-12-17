@@ -1,4 +1,4 @@
-from Util.general import generate_unique_id
+from util.general import generate_unique_id
 from ..db import users_table, thread_logger
 
 

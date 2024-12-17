@@ -1,8 +1,7 @@
 import datetime
-from Util.general import generate_unique_id
+from util.general import generate_unique_id
 from ..db import users_table, access_log_table, thread_logger, get_user
 import os
-
 
 def get_all_logs(user_id: str = None):
     thread_logger.info("Attempting to retrieve logs.")

@@ -1,7 +1,6 @@
 from .user import get_user
 from ..db import users_table, thread_logger
 
-
 def register_card_to_user(user_id: str, card_id: str):
     user = get_user(user_id)
     thread_logger.info(f"register_card_to_user:get_user ->> {user}")

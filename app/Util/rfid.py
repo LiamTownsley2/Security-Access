@@ -1,6 +1,6 @@
 import curses
 from time import sleep
-from Util.general import log_queue
+from util.general import log_queue
 
 
 def view_rfid_logs(stdscr):

@@ -2,7 +2,7 @@ import boto3
 import os
 import logging
 
-from .DynamoDB.user import (
+from .dynamoDB.user import (
     get_user,
     delete_user,
     generate_unique_id,
@@ -10,12 +10,12 @@ from .DynamoDB.user import (
     get_all_users,
     edit_user,
 )
-from .DynamoDB.cards import (
+from .dynamoDB.cards import (
     get_user_by_card,
     register_card_to_user,
     remove_all_links_to_card,
 )
-from .DynamoDB.accessLog import register_entry, get_entries_count, get_all_logs
+from .dynamoDB.accessLog import register_entry, get_entries_count, get_all_logs
 
 dynamodb = boto3.resource(
     "dynamodb",

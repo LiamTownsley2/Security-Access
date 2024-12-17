@@ -4,16 +4,16 @@ import curses
 import logging
 import threading
 
-import MainMenu
-import Util.curses
-import Util.general
-import Util.rfid
-from API.index import get_api_status, toggle_api_status
-from Classes.Camera import Camera
-from Classes.RFID_Reader import RFID_Reader
+import main_menu as menu
+import util.curses
+import util.general
+import util.rfid
+from api.index import get_api_status, toggle_api_status
+from classes.Camera import Camera
+from classes.RFID_Reader import RFID_Reader
 
 load_dotenv()
-Util.general.initialise_gpio_pins()
+util.general.initialise_gpio_pins()
 
 thread_logger_file_name = "thread_reader.log"
 thread_logger = logging.getLogger("ThreadLogger")
@@ -38,36 +38,36 @@ def handle_user_interaction(stdscr, key: str, menu):
 
 def main_menu(stdscr):
     menu_items = [
-        ["1", "Register an Employee", MainMenu.employee_management.user.add_user],
-        ["2", "Register a Keycard", MainMenu.employee_management.card.register_keycard],
+        ["1", "Register an Employee", menu.employee_management.user.add_user],
+        ["2", "Register a Keycard", menu.employee_management.card.register_keycard],
         [
             "3",
             "Revoke an Employees Access",
-            MainMenu.employee_management.user.remove_user,
+            menu.employee_management.user.remove_user,
         ],
         ["4", "Toggle RFID Scanner", rfid_reader.toggle_reading],
         ["5", "Toggle Web Interface", toggle_api_status],
-        ["6", "View RFID Logs", Util.rfid.view_rfid_logs],
+        ["6", "View RFID Logs", util.rfid.view_rfid_logs],
         ["q", "Quit", exit],
     ]
     curses.curs_set(0)
     stdscr.clear()
 
     log_thread = threading.Thread(
-        target=Util.general.watch_log_file, args=(thread_logger_file_name), daemon=False
+        target=util.general.watch_log_file, args=(thread_logger_file_name), daemon=False
     )
     log_thread.start()
 
-    Util.curses.register_colours()
+    util.curses.register_colours()
 
     while True:
         stdscr.clear()
 
-        Util.curses.output_ascii_art(stdscr, 0)
+        util.curses.output_ascii_art(stdscr, 0)
         stdscr.addstr(
             6, 0, "Welcome to the Command Line Interface.", curses.A_UNDERLINE
         )
-        Util.curses.interface_status(
+        util.curses.interface_status(
             stdscr, 8, rfid_reader.get_status(), get_api_status()
         )
 

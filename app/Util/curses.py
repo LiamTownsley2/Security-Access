@@ -1,5 +1,5 @@
 import curses
-import Util.general
+import util.general
 
 
 def ask_question(stdscr, question: str):
@@ -42,7 +42,7 @@ def interface_status(stdscr, starting_row: int, rfid_status: bool, api_status: b
     stdscr.addstr(
         starting_row,
         0,
-        "Interface Status:" + Util.general.repeat(" ", 32),
+        "Interface Status:" + util.general.repeat(" ", 32),
         curses.color_pair(1) | curses.A_BOLD,
     )
 
@@ -50,7 +50,7 @@ def interface_status(stdscr, starting_row: int, rfid_status: bool, api_status: b
     stdscr.addstr(
         9,
         0,
-        "RFID Scanning Interface:" + Util.general.repeat(" ", 25),
+        "RFID Scanning Interface:" + util.general.repeat(" ", 25),
         curses.color_pair(1) | curses.A_BOLD,
     )
     is_operational_curses(stdscr, 9, 25, rfid_status)
@@ -59,7 +59,7 @@ def interface_status(stdscr, starting_row: int, rfid_status: bool, api_status: b
     stdscr.addstr(
         10,
         0,
-        "Web Interface:" + Util.general.repeat(" ", 35),
+        "Web Interface:" + util.general.repeat(" ", 35),
         curses.color_pair(1) | curses.A_BOLD,
     )
     is_operational_curses(stdscr, 10, 15, api_status)

@@ -1,6 +1,6 @@
 from flask import Blueprint, abort, jsonify, request
 
-from AWS import db
+from aws import db
 
 bp_access_log = Blueprint("log", __name__, url_prefix="/log")
 

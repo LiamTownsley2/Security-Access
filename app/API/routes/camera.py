@@ -1,6 +1,6 @@
 from flask import Blueprint, abort, jsonify
 
-from AWS import S3
+from aws import S3
 
 bp_cameras = Blueprint("camera", __name__, url_prefix="/camera")
 

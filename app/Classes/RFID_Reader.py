@@ -1,9 +1,9 @@
 import sys
 from mfrc522 import SimpleMFRC522
 import multiprocessing
-from AWS import db
-import Util.general
-from app.Classes.DoorControl import DoorControl
+from aws import db
+import util.general
+from app.classes.DoorControl import DoorControl
 
 sys.path.append("..")
 
@@ -23,7 +23,7 @@ class RFID_Reader:
     def read_key(self):
         self.logger.info("RFID Reader is awaiting Key Presentation")
         id, text = self.reader.read()
-        filtered_text = Util.general.clean_text(text)
+        filtered_text = util.general.clean_text(text)
         return id, filtered_text
 
     def validate_key(user, text):
