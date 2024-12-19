@@ -27,10 +27,10 @@ static ssize_t led_write(struct kobject *kobj, struct kobj_attribute *attr, cons
 static struct kobj_attribute led_attribute = __ATTR(led_toggle, 0660, led_read, led_write); // 0660 = owner & group able to read/write 
 
 static int setup_sysfs(void) {
+    int ret;
     led_kobj = kobject_create_and_add("led_toggle", kernel_kobj);
     if (!led_kobj) return -ENOMEM;
     
-    int ret;
     ret = sysfs_create_file(led_kobj, &led_attribute.attr);
     if (ret) {
         kobject_put(led_kobj);
