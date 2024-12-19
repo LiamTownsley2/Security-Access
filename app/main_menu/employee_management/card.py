@@ -1,21 +1,21 @@
-import util.curses
+import util.curses as curses_util
 from aws import db
 from ...index import rfid_reader
 
 
 def confirm_keycard_registration(stdscr):
-    return util.curses.ask_question(
+    return curses_util.ask_question(
         stdscr, "Would you like to register a keycard? (Y/n):"
     ).lower() in ("", "y")
 
 
 def register_keycard(stdscr, employee_id=None):
     if employee_id is None:
-        employee_id = util.curses.ask_question(
+        employee_id = curses_util.ask_question(
             stdscr, "Enter the Employee ID or type 'back' to return:"
         )
         if employee_id.lower() == "back":
-            util.curses.send_simple(stdscr, "Returning to the main menu...", 1000)
+            curses_util.send_simple(stdscr, "Returning to the main menu...", 1000)
             return
 
     try:
@@ -28,12 +28,12 @@ def register_keycard(stdscr, employee_id=None):
             db.remove_all_links_to_card(id)
 
         db.register_card_to_user(employee_id, str(id))
-        util.curses.send_simple(
+        curses_util.send_simple(
             stdscr,
             f"User '{employee_id}' has had their Keycard Registered successfully!",
             2000,
         )
     except Exception:
-        util.curses.send_simple(
+        curses_util.send_simple(
             stdscr, f"Error registering keycard for '{employee_id}'.", 2000
         )

@@ -5,15 +5,14 @@ import logging
 import threading
 
 from main_menu import employee_management
-import util.curses
-import util.general
-import util.rfid
+import util.curses as curses_util
+import util.general as general_util
+import util.rfid as rfid_util
 from api.index import get_api_status, toggle_api_status
 from classes.Camera import Camera
 from classes.RFID_Reader import RFID_Reader
 
 load_dotenv()
-util.general.initialise_gpio_pins()
 
 thread_logger_file_name = "thread_reader.log"
 thread_logger = logging.getLogger("ThreadLogger")
@@ -47,27 +46,27 @@ def main_menu(stdscr):
         ],
         ["4", "Toggle RFID Scanner", rfid_reader.toggle_reading],
         ["5", "Toggle Web Interface", toggle_api_status],
-        ["6", "View RFID Logs", util.rfid.view_rfid_logs],
+        ["6", "View RFID Logs", rfid_util.view_rfid_logs],
         ["q", "Quit", exit],
     ]
     curses.curs_set(0)
     stdscr.clear()
 
     log_thread = threading.Thread(
-        target=util.general.watch_log_file, args=(thread_logger_file_name), daemon=False
+        target=general_util.watch_log_file, args=(thread_logger_file_name), daemon=False
     )
     log_thread.start()
 
-    util.curses.register_colours()
+    curses_util.register_colours()
 
     while True:
         stdscr.clear()
 
-        util.curses.output_ascii_art(stdscr, 0)
+        curses_util.output_ascii_art(stdscr, 0)
         stdscr.addstr(
             6, 0, "Welcome to the Command Line Interface.", curses.A_UNDERLINE
         )
-        util.curses.interface_status(
+        curses_util.interface_status(
             stdscr, 8, rfid_reader.get_status(), get_api_status()
         )
 
