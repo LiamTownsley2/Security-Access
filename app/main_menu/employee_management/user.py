@@ -1,4 +1,4 @@
-from ..employee_management import confirm_keycard_registration, register_keycard
+from .card import confirm_keycard_registration, register_keycard
 from aws import db
 import util.curses
 
