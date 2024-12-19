@@ -1,11 +1,4 @@
 #!/bin/bash
-# Generate & Active Virtual Environment
-if [ ! -d "venv" ]; then
-    echo "Virtual environment not found. Creating one..."
-    python3 -m venv venv
-fi
-source venv/bin/activate
-
 # Check Requirements
 if [ -f "requirements.txt" ]; then
     echo "Installing Python Dependencies..."
