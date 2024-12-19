@@ -4,7 +4,7 @@ import curses
 import logging
 import threading
 
-import main_menu as menu
+from main_menu import employee_management
 import util.curses
 import util.general
 import util.rfid
@@ -38,12 +38,12 @@ def handle_user_interaction(stdscr, key: str, menu):
 
 def main_menu(stdscr):
     menu_items = [
-        ["1", "Register an Employee", menu.employee_management.user.add_user],
-        ["2", "Register a Keycard", menu.employee_management.card.register_keycard],
+        ["1", "Register an Employee", employee_management.user.add_user],
+        ["2", "Register a Keycard", employee_management.card.register_keycard],
         [
             "3",
             "Revoke an Employees Access",
-            menu.employee_management.user.remove_user,
+            employee_management.user.remove_user,
         ],
         ["4", "Toggle RFID Scanner", rfid_reader.toggle_reading],
         ["5", "Toggle Web Interface", toggle_api_status],
