@@ -1,6 +1,5 @@
 import boto3
 import os
-import logging
 
 from .dynamoDB.user import (
     get_user,
@@ -24,15 +23,9 @@ dynamodb = boto3.resource(
     aws_session_token=os.getenv("AWS_SESSION_TOKEN"),
     region_name=os.getenv("AWS_REGION"),
 )
-users_table = dynamodb.Table("Users")
-access_log_table = dynamodb.Table("AccessLog")
-
-thread_logger = logging.getLogger("ThreadLogger")
 
 __all__ = [
     "dynamodb",
-    "users_table",
-    "access_log_table",
     # user
     "get_user",
     "delete_user",
