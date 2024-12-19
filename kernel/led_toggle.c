@@ -4,7 +4,7 @@
 #include <linux/init.h>
 #include <linux/sysfs.h>
 
-#define GPIO_PIN 17 
+#define GPIO_PIN 12 
 
 MODULE_LICENSE("GPL");
 MODULE_AUTHOR("Liam Townsley");
