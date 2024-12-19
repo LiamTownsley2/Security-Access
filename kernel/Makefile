@@ -1,5 +1,7 @@
-obj-m := led_toggle.o
+KERNEL := /home/cmp408/rpisrc/linux
+PWD := $(shell pwd)
+obj-m += led_toggle.o
 all:
-	make -C /lib/modules/5.4.51/build/ M=$(PWD) modules
+	make ARCH=arm CROSS_COMPILE=$(CROSS) -C $(KERNEL) M=$(PWD) modules
 clean:
-	make -C /lib/modules/5.4.51/build/ M=$(PWD) clean
+	make -C $(KERNEL) M=$(PWD) clean
