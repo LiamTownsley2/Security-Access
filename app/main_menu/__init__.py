@@ -1,3 +1,3 @@
-import employee_management
+from employee_management import __all__ as __employee_all__
 
-__all__ = ["employee_management"]
+__all__ = [__employee_all__]
