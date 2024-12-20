@@ -96,4 +96,4 @@ class RFID_Reader:
                     self.camera.record_and_upload(5)
 
         except Exception as e:
-            self.logger.error(e)
+            self.logger.error(e, stack_info=True)
