@@ -1,9 +1,8 @@
 KERNEL := /lib/modules/$(shell uname -r)/build
 PWD := $(shell pwd)
-CROSS := arm-linux-gnu-
 
 obj-m += led_toggle.o
 all:
-	make ARCH=arm CROSS_COMPILE=$(CROSS) -C $(KERNEL) M=$(PWD) modules
+	make ARCH=arm -C $(KERNEL) M=$(PWD) modules
 clean:
 	make -C $(KERNEL) M=$(PWD) clean
