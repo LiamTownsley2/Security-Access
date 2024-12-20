@@ -8,7 +8,7 @@ class DoorState(Enum):
     LOCKED = 0, # Light Off [LOW]
     UNLOCKED = 1 # Light On [HIGH]
 
-class DoorControl:
+class DoorController:
     def __init__(self):
         if not path.exists(sysfs_path):
             raise FileNotFoundError(f"Sysfs File Not Found. Expected Location: {sysfs_path}")

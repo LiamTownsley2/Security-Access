@@ -3,11 +3,11 @@ from mfrc522 import SimpleMFRC522
 import multiprocessing
 from aws import db
 import util.general as general_util
-from . import DoorControl
+from .DoorControl import DoorController
 
 sys.path.append("..")
 
-door_controller = DoorControl()
+door_controller = DoorController()
 
 class RFID_Reader:
     def __init__(self, logger, camera):
