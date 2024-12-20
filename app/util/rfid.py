@@ -5,7 +5,7 @@ from queue import Queue
 log_queue = Queue()
 
 def view_rfid_logs(stdscr):
-    return curses.wrapper(_generate_page, stdscr)
+    return _generate_page(stdscr)
 
 
 def _generate_page(stdscr):
