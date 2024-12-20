@@ -24,11 +24,23 @@ def register_keycard(stdscr, employee_id=None):
         stdscr.addstr(2, 0, "Awaiting Key Presentation..........")
         stdscr.refresh()
 
-        id, _ = rfid_reader.read_key()
+        id, text = rfid_reader.read_key()
+        stdscr.addstr(3, 0, "Key Presented........")
+        stdscr.addstr(4, 0, f"ID...........{id}")
+        stdscr.addstr(5, 0, f"Text.........{text}")
+        stdscr.refresh()
         if db.get_user_by_card(str(id), get_all=True):
+            stdscr.addstr(6, 0, "This card is shared with OTHER users!")
+            stdscr.refresh()
             db.remove_all_links_to_card(id)
+            stdscr.addstr(7, 0, "This card is no longer shared with other users!")
+            stdscr.refresh()
 
+        stdscr.addstr(8, 0, "Attempting to register card to Employee!")
+        stdscr.refresh()
         db.register_card_to_user(employee_id, str(id))
+        stdscr.addstr(9, 0, "Registered card to Employee!")
+        stdscr.refresh()
         curses_util.send_simple(
             stdscr,
             f"User '{employee_id}' has had their Keycard Registered successfully!",
