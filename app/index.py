@@ -14,9 +14,6 @@ from .api.index import get_api_status, toggle_api_status
 from .classes import Camera
 from .classes import RFID_Reader
 
-# Add app/ to Python Path.
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-
 thread_logger_file_name = "thread_reader.log"
 thread_logger = logging.getLogger("ThreadLogger")
 thread_logger.setLevel(logging.INFO)
