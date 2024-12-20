@@ -12,15 +12,17 @@ from main_menu.employee_management.card import rfid_reader
 # from classes.RFID_Reader import thread_logger_file_name
 
 def handle_user_interaction(stdscr, key, menu):
-    for item in menu:
-        try:
+    try:
+        for item in menu:
             if chr(key).lower() == item[0]:
                 item[2](stdscr)
-        except Exception:
-            pass
-    stdscr.addstr(23, 0, f"Selected ({type(chr(key))}): {chr(key)}", curses.A_BOLD)
-    stdscr.refresh()
-
+        
+        stdscr.addstr(23, 0, f"Selected ({type(chr(key))}): {chr(key)}", curses.A_BOLD)
+        stdscr.refresh()
+    except Exception:
+        pass
+    finally:
+        return
 
 def main_menu(stdscr):
     menu_items = [
