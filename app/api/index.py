@@ -4,7 +4,7 @@ from flask import Flask, jsonify, request
 from .routes import accessLog, camera, card, user
 import os
 import multiprocessing
-from app.classes.DoorControl import door_controller
+from classes.DoorControl import door_controller
 
 os.environ["FLASK_RUN_FROM_CLI"] = "false"
 
