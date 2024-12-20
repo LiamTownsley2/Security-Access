@@ -6,10 +6,10 @@ fi
 
 echo "Setting up Linux Kernel Module..."
 cd kernel/
-sudo ./load_module.sh
+sudo -E ./load_module.sh
 echo -e "SUCCESS: Loaded Linux Kernel Module"
 cd ..
 
 echo "Setting up Python Application..."
 cd app
-sudo ./load_python.sh
+sudo -E ./load_python.sh
