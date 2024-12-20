@@ -9,7 +9,7 @@ bp_dashboard = Blueprint("dashboard", __name__, url_prefix="/dashboard", templat
 def dashboard_index():
     return render_template("dashboard.html")
 
-@bp_dashboard.route("/", methods=["GET"])
+@bp_dashboard.route("/users", methods=["GET"])
 def dashboard_users():
     users = db.get_all_users()
     return render_template("users.html", users=users)
