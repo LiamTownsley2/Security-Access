@@ -2,14 +2,14 @@
 # Generate & Active Virtual Environment
 if [ ! -d "venv" ]; then
     echo "Virtual environment not found. Creating one..."
-    python3 -m venv venv
+    python3.8 -m venv venv
 fi
 source venv/bin/activate
 
 # Check Requirements
 if [ -f "requirements.txt" ]; then
     echo "Installing Python Dependencies..."
-    pip install --upgrade --upgrade-strategy only-if-needed -r requirements.txt
+    pip3.8 install --upgrade --upgrade-strategy only-if-needed -r requirements.txt
     echo -e"SUCCESS\tPython dependancies installed successfully."
 else
     echo -e "ERROR\t'requirements.txt' file not found."
