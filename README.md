@@ -1,17 +1,86 @@
-# CMP408 - Internet of Things: RFID Reader
-Python App - app/
-Linux Loadable Kernel Module - lkm/
+
+![Logo](./.github/logo.png)
 
 
-# How to build the kernel
-1. Use Fedora VM
-2. Clone the Git Repository
-3. Navigate to kernel/
-4. Execute the 'make' command
-5. SCP the files from Fedora VM -> Rasberry Pi
-scp -r kernel/ pi@192.168.0.64:/home/pi/CMP408-Internet-of-Things
-6. Insert the LKM
-sudo insmod /home/pi/CMP408-Internet-of-Things/kernel/toggle_led.ko
+# IoT RFID Scanner
+This project is designed for the Raspberry Pi Zero W, operating on Linux Kernel 5.10.103+. The core functionality of this project involves using an RFID (Radio Frequency Identification) scanner to read RFID tags, which could be used for access control or identity verification. The project takes advantage of the capabilities of Amazon Web Services (AWS) to extend the functionality of the local device to the cloud.
+
+This project also includes an API that is accessible via port `5000`. Additionally, the API provides a dashboard, which can be accessed at `http://your_ip:5000/dashboard`.
+## Demo
+
+![App Demo Gif](https://via.placeholder.com/468x300?text=App+Demo+Gif)
 
 
-# How to use the kernel to toggle the LED
+## Screenshots
+
+![App Screenshot](https://via.placeholder.com/468x300?text=App+Screenshot+Here)
+
+
+## Tech Stack
+
+**Application:** Python, boto3, picamera, mfrc522, Flask
+
+**Kernel:** C
+
+
+## Features
+
+- API (hosted on port 500)
+- Web Dashboard (hosted at `http://your_ip:5000/dashboard`)
+- Command Line Interface
+- In-built Linux Kernel Module
+
+
+## Environment Variables
+
+To run this project, you will need to add the following Environment Variables to your path or to the `.env` file.
+
+`AWS_ACCESS_KEY_ID`
+
+`AWS_SECRET_ACCESS_KEY`
+
+`AWS_SESSION_TOKEN`
+
+`AWS_REGION`
+
+`S3_BUCKET_NAME`
+
+
+
+## Run Locally
+
+Clone the project
+
+```bash
+  git clone https://github.com/LiamTownsley2/CMP408-Internet-of-Things.git
+```
+
+Go to the project directory
+
+```bash
+  cd CMP408-Internet-of-Things
+```
+
+Run the setup script
+```bash
+  sudo -E ./startup.sh
+```
+
+
+## API Documentation
+
+[API Documentation - Postman](https://cmp315.postman.co/workspace/New-Team-Workspace~ef0c1772-3d09-4444-98f4-23cfd4ed276a/collection/17093352-3ed4eabc-e8e3-4db1-9764-f164260748e8?action=share&creator=17093352)
+
+
+## Acknowledgements
+
+ - [Readme Generator - readme.so](https://readme.so/)
+## License
+
+[MIT](https://choosealicense.com/licenses/mit/)
+
+
+## Authors
+
+- [Liam Townsley (@LiamTownsley2)](https://www.github.com/LiamTownsley2)
+
