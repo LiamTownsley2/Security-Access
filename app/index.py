@@ -1,18 +1,14 @@
 #!/usr/bin/env python
-import sys
-import os
-
 import curses
 import logging
 import threading
 
-from .main_menu.employee_management import card, user
-from .util import curses as curses_util
-from .util import general as general_util
-from .util import rfid as rfid_util
-from .api.index import get_api_status, toggle_api_status
-from .classes import Camera
-from .classes import RFID_Reader
+from main_menu.employee_management import card, user
+from util import curses as curses_util
+from util import general as general_util
+from util import rfid as rfid_util
+from api.index import get_api_status, toggle_api_status
+from classes import Camera, RFID_Reader
 
 thread_logger_file_name = "thread_reader.log"
 thread_logger = logging.getLogger("ThreadLogger")
