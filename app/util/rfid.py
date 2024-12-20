@@ -18,12 +18,9 @@ def _generate_page(stdscr):
 
     log_lines = []
     while True:
-        try:
-            key = stdscr.getkey()
-            if key == "q":
-                break
-        except curses.error:
-            pass
+        key = stdscr.getkey()
+        if key == "q":
+            break
 
         while not log_queue.empty():
             log_lines.append(log_queue.get())
@@ -32,8 +29,7 @@ def _generate_page(stdscr):
 
         for idx, line in enumerate(log_lines, start=1):
             stdscr.addstr(idx, 0, line.strip())
-
         stdscr.refresh()
-        sleep(5)
+        sleep(2)
     sleep(10)
     return
