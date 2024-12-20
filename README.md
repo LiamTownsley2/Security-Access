@@ -5,8 +5,8 @@
 # IoT RFID Scanner
 [![OS - Linux](https://img.shields.io/badge/OS-Linux-blue?logo=linux&logoColor=white)](https://www.linux.org/ "Go to Linux homepage") 
 [![Made with Python](https://img.shields.io/badge/Python->=3.8-blue?logo=python&logoColor=white)](https://python.org "Go to Python homepage")
-![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/LiamTownsley2/Security-Access/codeql.yml?label=codeql)
-![GitHub License](https://img.shields.io/github/license/LiamTownsley2/Security-Access?cacheSeconds=120)
+[![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/LiamTownsley2/Security-Access/codeql.yml?label=codeql)](https://github.com/LiamTownsley2/Security-Access/actions/workflows/codeql.yml)
+[![GitHub License](https://img.shields.io/github/license/LiamTownsley2/Security-Access?cacheSeconds=120)](./LICENSE)
 
 This project is designed for the Raspberry Pi Zero W, operating on Linux Kernel 5.10.103+. The core functionality of this project involves using an RFID (Radio Frequency Identification) scanner to read RFID tags, which could be used for access control or identity verification. The project takes advantage of the capabilities of Amazon Web Services (AWS) to extend the functionality of the local device to the cloud.
 
