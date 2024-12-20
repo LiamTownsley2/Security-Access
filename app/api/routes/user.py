@@ -1,5 +1,6 @@
 from aws import db
 from flask import Blueprint, abort, jsonify, request
+import logging
 
 bp_user = Blueprint("user", __name__, url_prefix="/user")
 
@@ -11,7 +12,8 @@ def create_user():
         response = db.register_user(data["name"])
         return jsonify({"message": "User created.", "user_id": response}), 201
     except Exception as e:
-        return jsonify({"error": str(e)}), 400
+        logging.error("Error creating user: %s", str(e))
+        return jsonify({"error": "An internal error has occurred."}), 400
 
 
 @bp_user.route("/", methods=["GET"])
