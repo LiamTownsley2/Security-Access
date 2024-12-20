@@ -13,7 +13,7 @@ from main_menu.employee_management.card import rfid_reader
 
 def handle_user_interaction(stdscr, key, menu):
     for item in menu:
-        if str(key).lower() == item[0]:
+        if key.lower() == item[0]:
             item[2](stdscr)
             stdscr.addstr(23, 0, f"Selected: {item[1]}", curses.A_BOLD)
             stdscr.refresh()
