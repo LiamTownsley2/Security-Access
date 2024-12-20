@@ -1,6 +1,6 @@
 import util.curses as curses_util
 from aws import db
-from classes import RFID_Reader
+from classes.RFID_Reader import RFID_Reader
 
 rfid_reader = RFID_Reader()
 def confirm_keycard_registration(stdscr):
