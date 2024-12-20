@@ -71,9 +71,9 @@ def hello_world():
 @app.route("/lockout", methods=["POST"])
 def set_lockout():
     try:
-        state = door_controller.get_state()
-        door_controller.set_lockout(not state)
+        _, locked_out_state = door_controller.get_state()
+        door_controller.set_lockout(not locked_out_state)
     
-        return jsonify({"locked_out": str(not state)}), 200
+        return jsonify({"locked_out": str(not locked_out_state)}), 200
     except Exception as e:
         return jsonify({"error": str(e), "stack": traceback.format_exc()}), 400
