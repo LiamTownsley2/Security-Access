@@ -44,8 +44,10 @@ class RFID_Reader:
     def toggle_reading(self):
         if self.get_status():
             self.stop_reading()
+            thread_logger.log(logging.CRITICAL, "RFID READING STATUS STOPPED")
         else:
             self.start_reading()
+            thread_logger.log(logging.CRITICAL, "RFID READING STATUS STARTED")
 
     def start_reading(self):
         self.thread.start()
