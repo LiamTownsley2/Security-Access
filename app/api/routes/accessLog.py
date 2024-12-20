@@ -1,6 +1,5 @@
+from aws import S3, db
 from flask import Blueprint, abort, jsonify, request
-
-from aws import db, S3
 
 bp_access_log = Blueprint("log", __name__, url_prefix="/log")
 
@@ -38,6 +37,7 @@ def register_entry(user_id):
     except Exception as e:
         return jsonify({"error": str(e)}), 400
 
+
 @bp_access_log.route("/share", methods=["POST"])
 def share_video():
     try:
@@ -45,7 +45,7 @@ def share_video():
 
         bucket_name = data.get("bucket_name")
         file_object = data.get("file_object")
-        
+
         url = S3.generate_share_url(bucket_name, file_object)
         return jsonify({"url": url}), 200
     except Exception as e:

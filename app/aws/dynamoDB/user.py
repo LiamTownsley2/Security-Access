@@ -1,8 +1,11 @@
-from util.general import generate_unique_id
-from .tables import users_table
 import logging
 
+from util.general import generate_unique_id
+
+from .tables import users_table
+
 thread_logger = logging.getLogger("ThreadLogger")
+
 
 def register_user(name: str):
     user_id = generate_unique_id()

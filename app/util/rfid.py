@@ -1,9 +1,10 @@
 import curses
-from time import sleep
-from queue import Queue
 import traceback
+from queue import Queue
+from time import sleep
 
 log_queue = Queue()
+
 
 def view_rfid_logs(stdscr):
     return curses.wrapper(_generate_page)

@@ -1,7 +1,8 @@
-import picamera  # type: ignore
-from time import sleep
 import datetime
 import os
+from time import sleep
+
+import picamera  # type: ignore
 from aws import S3
 
 picam = picamera.PiCamera()

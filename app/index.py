@@ -1,15 +1,17 @@
 #!/usr/bin/env python
 import curses
 import threading
-# import logging
 
+from api.index import get_api_status, toggle_api_status
+from classes.RFID_Reader import thread_log_path
+
+# import logging
 from main_menu.employee_management import card, user
+from main_menu.employee_management.card import rfid_reader
 from util import curses as curses_util
 from util import general as general_util
 from util import rfid as rfid_util
-from api.index import get_api_status, toggle_api_status
-from main_menu.employee_management.card import rfid_reader
-from classes.RFID_Reader import thread_log_path
+
 
 def handle_user_interaction(stdscr, key, menu):
     try:
@@ -20,6 +22,7 @@ def handle_user_interaction(stdscr, key, menu):
         return False
     except Exception:
         pass
+
 
 def main_menu(stdscr):
     menu_items = [
@@ -61,7 +64,7 @@ def main_menu(stdscr):
 
         stdscr.addstr(21, 0, "Please select an option >> ")
         stdscr.addstr(22, 0, "")
-        
+
         stdscr.refresh()
 
         key = stdscr.getch()

@@ -1,5 +1,7 @@
 import curses
+
 import util.general as general_util
+
 
 def ask_question(stdscr, question: str):
     stdscr.clear()

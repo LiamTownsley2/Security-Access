@@ -1,6 +1,7 @@
-from .card import confirm_keycard_registration, register_keycard
-from aws import db
 import util.curses as curses_util
+from aws import db
+
+from .card import confirm_keycard_registration, register_keycard
 
 
 def add_user(stdscr):

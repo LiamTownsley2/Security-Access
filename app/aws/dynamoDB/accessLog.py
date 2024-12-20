@@ -1,11 +1,14 @@
 import datetime
-from util.general import generate_unique_id
-from .tables import users_table, access_log_table
-from .user import get_user
-import os
 import logging
+import os
+
+from util.general import generate_unique_id
+
+from .tables import access_log_table, users_table
+from .user import get_user
 
 thread_logger = logging.getLogger("ThreadLogger")
+
 
 def get_all_logs(user_id: str = None):
     thread_logger.info("Attempting to retrieve logs.")

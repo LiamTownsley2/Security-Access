@@ -1,8 +1,10 @@
-from .user import get_user
-from .tables import users_table
 import logging
 
+from .tables import users_table
+from .user import get_user
+
 thread_logger = logging.getLogger("ThreadLogger")
+
 
 def register_card_to_user(user_id: str, card_id: str):
     user = get_user(user_id)

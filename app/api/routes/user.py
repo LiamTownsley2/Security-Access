@@ -1,5 +1,5 @@
-from flask import Blueprint, jsonify, request, abort
 from aws import db
+from flask import Blueprint, abort, jsonify, request
 
 bp_user = Blueprint("user", __name__, url_prefix="/user")
 

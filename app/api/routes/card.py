@@ -1,5 +1,5 @@
-from flask import Blueprint, jsonify, abort
 from aws import db
+from flask import Blueprint, abort, jsonify
 
 bp_cards = Blueprint("card", __name__, url_prefix="/card")
 

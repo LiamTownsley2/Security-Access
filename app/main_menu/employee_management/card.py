@@ -3,6 +3,8 @@ from aws import db
 from classes.RFID_Reader import RFID_Reader
 
 rfid_reader = RFID_Reader()
+
+
 def confirm_keycard_registration(stdscr):
     return curses_util.ask_question(
         stdscr, "Would you like to register a keycard? (Y/n):"

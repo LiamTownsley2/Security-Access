@@ -1,27 +1,31 @@
 import logging
-from mfrc522 import SimpleMFRC522
-import threading
-from aws import db
-import util.general as general_util
-from . import DoorControl, Camera
-import RPi.GPIO as GPIO # type: ignore
 import os
+import threading
 import traceback
+
+import RPi.GPIO as GPIO  # type: ignore
+import util.general as general_util
+from aws import db
+from mfrc522 import SimpleMFRC522
+
+from . import Camera, DoorControl
 
 GPIO.setwarnings(False)
 thread_logger_file_name = "thread_reader.log"
 thread_logger = logging.getLogger("ThreadLogger")
 thread_logger.setLevel(logging.INFO)
 thread_file_handler = logging.FileHandler(thread_logger_file_name)
-thread_file_handler.setFormatter(logging.Formatter("%(asctime)s - %(levelname)s - %(message)s"))
+thread_file_handler.setFormatter(
+    logging.Formatter("%(asctime)s - %(levelname)s - %(message)s")
+)
 thread_logger.addHandler(thread_file_handler)
 thread_log_path = os.path.abspath(thread_logger_file_name)
 
 door_controller = DoorControl.DoorController()
 
+
 class RFID_Reader:
     def __init__(self):
-        
         self.status = False
         self.reader = SimpleMFRC522()
         self.logger = thread_logger
@@ -51,7 +55,7 @@ class RFID_Reader:
         else:
             self.start_reading()
             thread_logger.log(logging.CRITICAL, "RFID READING STATUS STARTED")
-    
+
     def start(self, stdscr):
         self.start_reading()
         stdscr.refresh()
@@ -89,15 +93,17 @@ class RFID_Reader:
                         5, user["UserID"]
                     )
                     self.logger.info(f"Upload {file_object} to bucket {bucket}.")
-                    
+
                     db.register_entry(str(id), user["UserID"], file_object)
                     entries = db.get_entries_count(user["UserID"])
                     self.logger.info(
                         f"This employee has entered this building {entries} time(s) before."
                     )
-                    
+
                 else:
                     self.camera.record_and_upload(5)
 
         except Exception as e:
-            self.logger.error(f"Exception: {str(e)}\n{traceback.format_exc()}", stack_info=True)
+            self.logger.error(
+                f"Exception: {str(e)}\n{traceback.format_exc()}", stack_info=True
+            )
