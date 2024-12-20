@@ -36,7 +36,7 @@ class RFID_Reader:
         filtered_text = general_util.clean_text(text)
         return id, filtered_text
 
-    def validate_key(user, text):
+    def validate_key(self, user, text):
         if not user:
             return False
         if not text == "secret":
