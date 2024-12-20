@@ -10,9 +10,9 @@ from api.index import get_api_status, toggle_api_status
 from main_menu.employee_management.card import rfid_reader
 from classes.RFID_Reader import thread_logger_file_name
 
-def handle_user_interaction(stdscr, key: str, menu):
+def handle_user_interaction(stdscr, key, menu):
     for item in menu:
-        if key.lower() == item[0]:
+        if str(key).lower() == item[0]:
             item[2](stdscr)
             return True
     return False
