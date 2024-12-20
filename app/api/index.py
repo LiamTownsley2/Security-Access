@@ -41,11 +41,12 @@ def initialize_api():
     api_status = True
 
 
-def toggle_api_status():
+def toggle_api_status(stdscr):
     if get_api_status():
         destroy_api()
     else:
         initialize_api()
+    stdscr.refresh()
     return
 
 
