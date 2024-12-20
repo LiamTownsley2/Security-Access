@@ -26,7 +26,9 @@ class DoorController:
             state = file.read().strip()
             is_active = state == "1"
         return [is_active, self.locked_out]
-
+    def get_locked_out(self):
+        return self.locked_out
+    
     def lock(self):
         if self.locked_out:
             return False
