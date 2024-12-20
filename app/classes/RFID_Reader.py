@@ -82,9 +82,11 @@ class RFID_Reader:
                 )
 
                 if is_valid:
+                    self.logger.info("Attempting upload to bucket.")
                     bucket, file_object = self.camera.record_and_upload(
                         5, user["UserID"]
                     )
+                    self.logger.info(f"Upload {file_object} to bucket {bucket}.")
 
                     db.register_entry(str(id), user["UserID"], file_object)
                     entries = db.get_entries_count(user["UserID"])
