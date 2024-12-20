@@ -5,7 +5,7 @@ from queue import Queue
 log_queue = Queue()
 
 def view_rfid_logs(stdscr):
-    return _generate_page(stdscr)
+    return curses.wrapper(_generate_page)
 
 
 def _generate_page(stdscr):
@@ -30,6 +30,4 @@ def _generate_page(stdscr):
         for idx, line in enumerate(log_lines, start=1):
             stdscr.addstr(idx, 0, line.strip())
         stdscr.refresh()
-        sleep(2)
-    sleep(10)
-    return
+        sleep(0.1)
