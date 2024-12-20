@@ -1,11 +1,11 @@
 import logging
 from mfrc522 import SimpleMFRC522
-import multiprocessing
 import threading
 from aws import db
 import util.general as general_util
 from . import DoorControl, Camera
 import RPi.GPIO as GPIO # type: ignore
+import os
 
 GPIO.setwarnings(False)
 thread_logger_file_name = "thread_reader.log"
@@ -14,6 +14,7 @@ thread_logger.setLevel(logging.INFO)
 thread_file_handler = logging.FileHandler(thread_logger_file_name)
 thread_file_handler.setFormatter(logging.Formatter("%(asctime)s - %(levelname)s - %(message)s"))
 thread_logger.addHandler(thread_file_handler)
+thread_log_path = os.path.abspath(thread_logger_file_name)
 
 door_controller = DoorControl.DoorController()
 
