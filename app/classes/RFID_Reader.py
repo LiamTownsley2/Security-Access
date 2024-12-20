@@ -54,6 +54,7 @@ class RFID_Reader:
     def start(self, stdscr):
         self.start_reading()
         stdscr.refresh()
+        return
 
     def start_reading(self):
         self.thread.start()
