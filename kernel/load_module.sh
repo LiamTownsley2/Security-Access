@@ -1,5 +1,8 @@
 #!/bin/bash
 # Compile LKM
+echo "Cleaning up......"
+make clean
+
 echo "Compiling Linux Kernel Module (led_toggle)..."
 make
 
