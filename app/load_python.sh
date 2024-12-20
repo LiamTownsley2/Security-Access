@@ -18,4 +18,4 @@ fi
 
 echo "Starting App..."
 # Start App
-python3.8 index.py
+sudo -E python3.8 index.py

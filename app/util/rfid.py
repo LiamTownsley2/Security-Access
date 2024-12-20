@@ -1,10 +1,12 @@
 import curses
 from time import sleep
-from util.general import log_queue
+from queue import Queue
+import traceback
 
+log_queue = Queue()
 
 def view_rfid_logs(stdscr):
-    return curses.wrapper(_generate_page, stdscr)
+    return curses.wrapper(_generate_page)
 
 
 def _generate_page(stdscr):
@@ -18,19 +20,19 @@ def _generate_page(stdscr):
     log_lines = []
     while True:
         try:
-            key = stdscr.getkey()
-            if key == "q":
+            key = stdscr.getch()
+            if key == ord("q"):
                 break
-        except curses.error:
-            pass
 
-        while not log_queue.empty():
-            log_lines.append(log_queue.get())
+            while not log_queue.empty():
+                log_lines.append(log_queue.get())
 
-        log_lines = log_lines[-20:]
+            log_lines = log_lines[-20:]
 
-        for idx, line in enumerate(log_lines, start=1):
-            stdscr.addstr(idx, 0, line.strip())
-
-        stdscr.refresh()
-        sleep(0.1)
+            for idx, line in enumerate(log_lines, start=1):
+                stdscr.addstr(idx, 0, line.strip())
+            stdscr.refresh()
+            sleep(0.1)
+        except Exception:
+            traceback.print_exc()
+            sleep(10)
