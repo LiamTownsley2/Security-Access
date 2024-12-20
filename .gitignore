@@ -9,3 +9,12 @@
 __pycache__
 .VSCodeCounter
 venv/
+.vscode/
+
+# LKM
+*.ko
+*.o
+*.mod
+*.mod.c
+Module.symvers
+modules.order

@@ -1,0 +1,7 @@
+boto3
+python-dotenv
+picamera
+smbus2
+mfrc522
+Flask
+RPi.GPIO
