@@ -15,7 +15,7 @@ class RFID_Reader:
         self.reader = SimpleMFRC522()
         self.logger = logger
         self.camera = camera
-        self.thread = multiprocessing.Process(target=self.start_reader, daemon=True)
+        self.thread = multiprocessing.Process(target=self.read_key, daemon=True)
 
     def get_status(self):
         return self.status
