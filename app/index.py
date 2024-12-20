@@ -17,8 +17,11 @@ def handle_user_interaction(stdscr, key, menu):
     try:
         for item in menu:
             if chr(key).lower() == item[0]:
-                item[2](stdscr)
-                return True
+                if item[2]:
+                    item[2](stdscr)
+                    return True
+                else:
+                    return False
         return False
     except Exception:
         pass
@@ -36,7 +39,7 @@ def main_menu(stdscr):
         ["4", "Toggle RFID Scanner", rfid_reader.start],
         ["5", "Toggle Web Interface", toggle_api_status],
         ["6", "View RFID Logs", rfid_util.view_rfid_logs],
-        ["q", "Quit", curses.endwin],
+        ["q", "Quit", None],
     ]
     curses.curs_set(0)
     stdscr.clear()
@@ -68,7 +71,9 @@ def main_menu(stdscr):
         stdscr.refresh()
 
         key = stdscr.getch()
-        handle_user_interaction(stdscr, key, menu_items)
-
+        response = handle_user_interaction(stdscr, key, menu_items)
+        if not response:
+            break
+    curses.endwin()
 
 curses.wrapper(main_menu)
