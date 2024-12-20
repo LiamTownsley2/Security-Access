@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+</head>
+<body>
+    <h1>Welcome to the Access Logs!</h1>
+    <h2><a href="/dashboard">Go Back</a></h2>
+    <h2>Access Log</h2>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Log ID</th>
+                <th>User ID</th>
+                <th>Time</th>
+                <th>Video</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for log in logs %}
+            <tr>
+                <td>{{ log.LogID }}</td>
+                <td>{{ log.UserID }}</td>
+                <td>{{ log.Time }}</td>
+                <td><button onclick="viewVideo('{{ log.Bucket }}', '{{ log.FileObject }}')">View Video</button></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+
+    <script>
+        function viewVideo(bucket_name, file_object) {
+            fetch(`/log/share`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ bucket_name, file_object })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.url) {
+                    alert('Video shared sucesfully');
+                    console.log(data.url);
+                    window.open(data.url, '_blank', 'noopener noreferrer');
+                } else {
+                    alert('Error sharing video');
+                }
+            })
+            .catch(error => {
+                alert('An error occurred');
+                console.error('Error:', error);
+            });
+        }
+    </script>
+</body>
+</html>
