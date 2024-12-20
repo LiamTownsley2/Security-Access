@@ -6,6 +6,7 @@ import util.general as general_util
 from . import DoorControl, Camera
 import RPi.GPIO as GPIO # type: ignore
 import os
+import traceback
 
 GPIO.setwarnings(False)
 thread_logger_file_name = "thread_reader.log"
@@ -98,4 +99,4 @@ class RFID_Reader:
                     self.camera.record_and_upload(5)
 
         except Exception as e:
-            self.logger.error(e, stack_info=True)
+            self.logger.error(f"Exception: {str(e)}\n{traceback.format_exc()}", stack_info=True)
