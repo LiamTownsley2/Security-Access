@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+</head>
+<body>
+    <h1>Welcome to the Dashboard!</h1>
+    <h2>Employee List</h2>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>User ID</th>
+                <th>Name</th>
+                <th>Card ID</th>
+                <th>Last Scanned</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+            <tr>
+                <td>{{ user.UserID }}</td>
+                <td>{{ user.Name }}</td>
+                <td>{{ user.CardID }}</td>
+                <td>{{ user.LastScanned }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <h2>Add New Employee</h2>
+    <form id="addUserForm">
+        <label for="name">Name:</label><br>
+        <input type="text" id="name" name="name"><br><br>
+        <button type="submit">Add User</button>
+    </form>
+
+    <h2>Delete an Employee</h2>
+    <form id="removeUserForm">
+        <label for="employee_id">Employee ID:</label><br>
+        <input type="text" id="employee_id" name="employee_id"><br><br>
+        <button type="submit">Delete User</button>
+    </form>
+
+    <script>
+        document.getElementById('addUserForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const name = document.getElementById('name').value;
+
+            fetch('/user', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ name })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.message) {
+                    alert('User added successfully');
+                    location.reload();
+                } else {
+                    alert('Error adding user');
+                }
+            })
+            .catch(error => {
+                alert('An error occurred');
+                console.error('Error:', error);
+            });
+        });
+        document.getElementById('removeUserForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const employee_id = document.getElementById('employee_id').value;
+
+            fetch(`/user/${employee_id}`, {
+                method: 'DELETE'
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.message) {
+                    alert('User deleted successfully');
+                    location.reload();
+                } else {
+                    alert('Error deleting user');
+                }
+            })
+            .catch(error => {
+                alert('An error occurred');
+                console.error('Error:', error);
+            });
+        });
+    </script>
+</body>
+</html>

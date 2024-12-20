@@ -7,63 +7,6 @@
 </head>
 <body>
     <h1>Welcome to the Dashboard!</h1>
-    
-    <h2>Users List</h2>
-    <table border="1">
-        <thead>
-            <tr>
-                <th>User ID</th>
-                <th>Name</th>
-                <th>Card ID</th>
-                <th>Last Scanned</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for user in users %}
-            <tr>
-                <td>{{ user.UserID }}</td>
-                <td>{{ user.Name }}</td>
-                <td>{{ user.CardID }}</td>
-                <td>{{ user.LastScanned }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-
-    <h2>Add New User</h2>
-    <form id="addUserForm">
-        <label for="name">Name:</label><br>
-        <input type="text" id="name" name="name"><br><br>
-        <button type="submit">Add User</button>
-    </form>
-
-    <script>
-        document.getElementById('addUserForm').addEventListener('submit', function(event) {
-            event.preventDefault();
-
-            const name = document.getElementById('name').value;
-
-            fetch('/user', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ name })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.message) {
-                    alert('User added successfully');
-                    location.reload();
-                } else {
-                    alert('Error adding user');
-                }
-            })
-            .catch(error => {
-                alert('An error occurred');
-                console.error('Error:', error);
-            });
-        });
-    </script>
+    <ul><a href="/dashboard/users"></a></ul>
 </body>
 </html>
