@@ -18,4 +18,4 @@ fi
 
 echo "Starting App..."
 # Start App
-python index.py
+python -E index.py
