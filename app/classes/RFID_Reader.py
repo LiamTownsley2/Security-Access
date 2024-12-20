@@ -1,6 +1,7 @@
 import logging
 from mfrc522 import SimpleMFRC522
 import multiprocessing
+import threading
 from aws import db
 import util.general as general_util
 from . import DoorControl, Camera
@@ -23,7 +24,7 @@ class RFID_Reader:
         self.reader = SimpleMFRC522()
         self.logger = thread_logger
         self.camera = Camera.Camera()
-        self.thread = multiprocessing.Process(target=self._start_reader, daemon=True)
+        self.thread = threading.Thread(target=self._start_reader, daemon=True)
 
     def get_status(self):
         return self.status
