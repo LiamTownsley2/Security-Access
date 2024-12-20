@@ -46,6 +46,7 @@ def toggle_api_status():
         destroy_api()
     else:
         initialize_api()
+    return
 
 
 def get_api_status():
