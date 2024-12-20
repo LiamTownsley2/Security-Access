@@ -10,8 +10,11 @@ s3 = boto3.client(
 
 
 def upload_to_s3(file_name, object_name):
-    s3.upload_file(file_name, os.getenv(os.getenv("S3_BUCKET_NAME")), object_name)
-    return os.getenv("S3_BUCKET_NAME"), object_name
+    bucket_name = os.getenv("S3_BUCKET_NAME")
+    if not bucket_name:
+        return None
+    s3.upload_file(file_name, bucket_name, object_name)
+    return bucket_name, object_name
 
 
 def get_videos_by_folder(directory_name):
