@@ -4,7 +4,9 @@ import multiprocessing
 from aws import db
 import util.general as general_util
 from . import DoorControl, Camera
+import RPi.GPIO as GPIO # type: ignore
 
+GPIO.setwarnings(False)
 thread_logger_file_name = "thread_reader.log"
 thread_logger = logging.getLogger("ThreadLogger")
 thread_logger.setLevel(logging.INFO)
