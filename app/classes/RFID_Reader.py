@@ -83,18 +83,19 @@ class RFID_Reader:
                 )
 
                 if is_valid:
+                    door_controller.unlock(3)
                     self.logger.info("Attempting upload to bucket.")
                     bucket, file_object = self.camera.record_and_upload(
                         5, user["UserID"]
                     )
                     self.logger.info(f"Upload {file_object} to bucket {bucket}.")
-
+                    
                     db.register_entry(str(id), user["UserID"], file_object)
                     entries = db.get_entries_count(user["UserID"])
                     self.logger.info(
                         f"This employee has entered this building {entries} time(s) before."
                     )
-                    door_controller.unlock(3)
+                    
                 else:
                     self.camera.record_and_upload(5)
 
