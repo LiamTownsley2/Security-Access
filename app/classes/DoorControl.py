@@ -9,7 +9,7 @@ thread_logger = logging.getLogger("ThreadLogger")
 sysfs_path = "/sys/kernel/led_toggle/led_toggle"
 
 class DoorState(Enum):
-    LOCKED = "0", # Light Off [LOW]
+    LOCKED = "0" # Light Off [LOW]
     UNLOCKED = "1" # Light On [HIGH]
 
 class DoorController:
