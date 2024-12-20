@@ -14,14 +14,12 @@ from main_menu.employee_management.card import rfid_reader
 def handle_user_interaction(stdscr, key, menu):
     for item in menu:
         try:
-            if key.lower() == item[0]:
+            if chr(key).lower() == item[0]:
                 item[2](stdscr)
-                return True
         except Exception:
             pass
-    stdscr.addstr(23, 0, f"Selected ({type(key)}): {key}", curses.A_BOLD)
+    stdscr.addstr(23, 0, f"Selected ({type(chr(key))}): {chr(key)}", curses.A_BOLD)
     stdscr.refresh()
-    return False
 
 
 def main_menu(stdscr):
