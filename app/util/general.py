@@ -1,9 +1,7 @@
 import re
 import random
 import time
-from queue import Queue
-
-log_queue = Queue()
+from .rfid import log_queue
 
 def generate_unique_id():
     timestamp = int(time.time() * 1000)
@@ -17,7 +15,7 @@ def clean_text(text):
     filtered_text = re.sub(r"\W+", "", text)
     return filtered_text
 
-def watch_log_file(file_path, log_queue):
+def watch_log_file(file_path):
     with open(file_path, "r") as log_file:
         log_file.seek(0, 2)
         while True:

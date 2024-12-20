@@ -4,7 +4,7 @@
 #include <linux/init.h>
 #include <linux/sysfs.h>
 
-#define GPIO_PIN 17 
+#define GPIO_PIN 12 
 
 MODULE_LICENSE("GPL");
 MODULE_AUTHOR("Liam Townsley");
@@ -13,7 +13,6 @@ MODULE_VERSION("1.0");
 
 static int led_toggle = 0;
 static struct kobject *led_kobj;
-static struct kobj_attribute led_attribute = __ATTR(led_toggle, 0660, led_read, led_write); // 0660 = owner & group able to read/write 
 
 static ssize_t led_read(struct kobject *kobj, struct kobj_attribute *attr, char *buffer) {
     return snprintf(buffer, PAGE_SIZE, "%d\n", led_toggle);
@@ -25,10 +24,13 @@ static ssize_t led_write(struct kobject *kobj, struct kobj_attribute *attr, cons
     return count;
 }
 
+static struct kobj_attribute led_attribute = __ATTR(led_toggle, 0660, led_read, led_write); // 0660 = owner & group able to read/write 
+
 static int setup_sysfs(void) {
+    int ret;
     led_kobj = kobject_create_and_add("led_toggle", kernel_kobj);
     if (!led_kobj) return -ENOMEM;
-
+    
     ret = sysfs_create_file(led_kobj, &led_attribute.attr);
     if (ret) {
         kobject_put(led_kobj);
@@ -37,16 +39,18 @@ static int setup_sysfs(void) {
     return 0;
 }
 
-static int lock_gpio(void) {
+static void lock_gpio(void) {
     gpio_request(GPIO_PIN, "sysfs");
     gpio_direction_output(GPIO_PIN, 0);
     gpio_export(GPIO_PIN, false);
+    return;
 }
 
 static void free_gpio(void) {
     gpio_set_value(GPIO_PIN, 0);
     gpio_unexport(GPIO_PIN);
-    gpio_free(GPIO_PIN); 
+    gpio_free(GPIO_PIN);
+    return;
 }
 
 static int __init led_module_init(void) {
