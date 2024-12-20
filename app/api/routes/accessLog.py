@@ -1,5 +1,6 @@
 from aws import S3, db
 from flask import Blueprint, abort, jsonify, request
+import logging
 
 bp_access_log = Blueprint("log", __name__, url_prefix="/log")
 
@@ -12,7 +13,8 @@ def read_logs():
             abort(404, description="No logs found.")
         return jsonify(response), 200
     except Exception as e:
-        return jsonify({"error": str(e)}), 400
+        logging.error("Error creating user: %s", str(e))
+        return jsonify({"error": "An internal error has occurred."}), 400
 
 
 @bp_access_log.route("/<int:user_id>", methods=["GET"])
@@ -23,7 +25,8 @@ def read_logs_by_employee(user_id):
             abort(404, description="No logs found.")
         return jsonify(response), 200
     except Exception as e:
-        return jsonify({"error": str(e)}), 400
+        logging.error("Error creating user: %s", str(e))
+        return jsonify({"error": "An internal error has occurred."}), 400
 
 
 @bp_access_log.route("/<int:user_id>", methods=["POST"])
@@ -35,7 +38,8 @@ def register_entry(user_id):
         db.register_entry(data["TagID"], user_id)
         return jsonify("Success"), 200
     except Exception as e:
-        return jsonify({"error": str(e)}), 400
+        logging.error("Error creating user: %s", str(e))
+        return jsonify({"error": "An internal error has occurred."}), 400
 
 
 @bp_access_log.route("/share", methods=["POST"])
@@ -49,4 +53,5 @@ def share_video():
         url = S3.generate_share_url(bucket_name, file_object)
         return jsonify({"url": url}), 200
     except Exception as e:
-        return jsonify({"error": str(e)}), 400
+        logging.error("Error creating user: %s", str(e))
+        return jsonify({"error": "An internal error has occurred."}), 400

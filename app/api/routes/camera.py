@@ -1,5 +1,6 @@
 from aws import S3
 from flask import Blueprint, abort, jsonify
+import logging
 
 bp_cameras = Blueprint("camera", __name__, url_prefix="/camera")
 
@@ -10,7 +11,8 @@ def view_camera():
         return abort(404, description="Not implemented.")
         # return jsonify(response), 200
     except Exception as e:
-        return jsonify({"error": str(e)}), 400
+        logging.error("Error creating user: %s", str(e))
+        return jsonify({"error": "An internal error has occurred."}), 400
 
 
 @bp_cameras.route("/history/unidentified", methods=["GET"])
@@ -21,7 +23,8 @@ def view_unidentified_footage():
             return abort(404, "No footage found.")
         return jsonify(response), 200
     except Exception as e:
-        return jsonify({"error": str(e)}), 400
+        logging.error("Error creating user: %s", str(e))
+        return jsonify({"error": "An internal error has occurred."}), 400
 
 
 @bp_cameras.route("/history/<int:user_id>", methods=["GET"])
@@ -32,4 +35,5 @@ def view_employee_footage(user_id):
             return abort(404, "No footage found.")
         return jsonify(response), 200
     except Exception as e:
-        return jsonify({"error": str(e)}), 400
+        logging.error("Error creating user: %s", str(e))
+        return jsonify({"error": "An internal error has occurred."}), 400

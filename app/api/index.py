@@ -1,7 +1,6 @@
 import logging
 import multiprocessing
 import os
-import traceback
 
 from classes.RFID_Reader import door_controller
 from flask import Flask, jsonify
@@ -82,4 +81,5 @@ def set_lockout():
 
         return jsonify({"locked_out": str(not locked_out_state)}), 200
     except Exception as e:
-        return jsonify({"error": str(e), "stack": traceback.format_exc()}), 400
+        logging.error("Error creating user: %s", str(e))
+        return jsonify({"error": "An internal error has occurred."}), 400
