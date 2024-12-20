@@ -38,7 +38,7 @@ api_status = False
 def initialize_api():
     global api_status
     api_process.start()
-    api_status = api_process.is_alive()
+    api_status = True
 
 
 def toggle_api_status():
@@ -58,7 +58,7 @@ def destroy_api():
     global api_status
     api_process.terminate()
     api_process.join()
-    api_status = api_process.is_alive()
+    api_status = False
 
 
 @app.route("/")
