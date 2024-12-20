@@ -1,6 +1,6 @@
 import util.curses as curses_util
 from aws import db
-from ...index import rfid_reader
+from app.index import rfid_reader
 def confirm_keycard_registration(stdscr):
     return curses_util.ask_question(
         stdscr, "Would you like to register a keycard? (Y/n):"
