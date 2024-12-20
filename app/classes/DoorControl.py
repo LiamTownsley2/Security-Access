@@ -39,11 +39,11 @@ class DoorController:
         else:
             self.lock()
 
-    def _write_state(self, state: int):
-        thread_logger.info(f"Attempting to write state {str(state)}")
+    def _write_state(self, state: DoorState):
+        thread_logger.info(f"Attempting to write state {str(state.value)}")
 
         try:
-            subprocess.run(['sudo', 'sh', '-c', f'echo {state} > {sysfs_path}'], check=True)
-            thread_logger.info(f"Successfully wrote state {str(state)} to {sysfs_path}")
+            subprocess.run(['sudo', 'sh', '-c', f'echo {state.value} > {sysfs_path}'], check=True)
+            thread_logger.info(f"Successfully wrote state {str(state.value)} to {sysfs_path}")
         except subprocess.CalledProcessError as e:
             thread_logger.error(f"Failed to write state to sysfs: {e}")
