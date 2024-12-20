@@ -3,7 +3,7 @@ from mfrc522 import SimpleMFRC522
 import multiprocessing
 from aws import db
 import util.general as general_util
-from app.classes.DoorControl import DoorControl
+from . import DoorControl
 
 sys.path.append("..")
 
