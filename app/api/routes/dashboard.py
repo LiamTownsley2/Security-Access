@@ -13,3 +13,8 @@ def dashboard_index():
 def dashboard_users():
     users = db.get_all_users()
     return render_template("users.html", users=users)
+
+@bp_dashboard.route("/access-log", methods=["GET"])
+def dashboard_access_log():
+    logs = db.get_all_logs()
+    return render_template("access-log.html", logs=logs)
