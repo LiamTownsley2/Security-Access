@@ -2,14 +2,14 @@
 # Generate & Active Virtual Environment
 if [ ! -d "venv" ]; then
     echo "Virtual environment not found. Creating one..."
-    sudo python3.8 -m venv venv
+    python3.8 -m venv venv
 fi
-sudo source venv/bin/activate
+source venv/bin/activate
 
 # Check Requirements
 if [ -f "requirements.txt" ]; then
     echo "Installing Python Dependencies..."
-    sudo pip3.8 install --upgrade --upgrade-strategy only-if-needed -r requirements.txt
+    pip3.8 install --upgrade --upgrade-strategy only-if-needed -r requirements.txt
     echo -e"SUCCESS\tPython dependancies installed successfully."
 else
     echo -e "ERROR\t'requirements.txt' file not found."
@@ -18,4 +18,4 @@ fi
 
 echo "Starting App..."
 # Start App
-sudo python3.8 index.py
+python3.8 index.py
