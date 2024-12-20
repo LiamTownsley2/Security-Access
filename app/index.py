@@ -36,7 +36,7 @@ def main_menu(stdscr):
         ["4", "Toggle RFID Scanner", rfid_reader.start],
         ["5", "Toggle Web Interface", toggle_api_status],
         ["6", "View RFID Logs", rfid_util.view_rfid_logs],
-        ["q", "Quit", curses.endwin()],
+        ["q", "Quit", curses.endwin],
     ]
     curses.curs_set(0)
     stdscr.clear()
