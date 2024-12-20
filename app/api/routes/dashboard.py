@@ -18,11 +18,3 @@ def dashboard_users():
 def dashboard_access_log():
     logs = db.get_all_logs()
     return render_template("access-log.html", logs=logs)
-
-@bp_dashboard.route("/video-player", methods=["GET"])
-def dashboard_video_player():
-    s3_url = request.args.get('s3')
-    if s3_url:
-        return render_template("video-player.html", s3_url=s3_url)
-    else:
-        return "No video URL provided", 400
