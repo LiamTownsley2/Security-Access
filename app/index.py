@@ -15,7 +15,7 @@ def handle_user_interaction(stdscr, key, menu):
     try:
         for item in menu:
             if chr(key).lower() == item[0]:
-                item[2](stdscr)
+                # item[2](stdscr)
                 return True
         return False
     except Exception:
