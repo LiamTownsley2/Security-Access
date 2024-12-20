@@ -1,18 +1,10 @@
 #!/bin/bash
-if [ ! -d "venv" ]; then
-    echo "Virtual environment not found. Creating one..."
-    python3 -m venv venv
-else
-    echo "Virtual environment already exists."
-fi
+echo "Setting up Linux Kernel Module..."
+cd kernel/
+sudo ./load_module.sh
+echo -e "SUCCESS: Loaded Linux Kernel Module"
+cd ..
 
-source venv/bin/activate
-
-if [ -f "requirements.txt" ]; then
-    echo "Installing dependencies..."
-    pip install --upgrade --upgrade-strategy only-if-needed -r requirements.txt
-else
-    echo "requirements.txt not found."
-fi
-
-python3 index.py
+echo "Setting up Python Application..."
+cd app
+./load_python.sh
