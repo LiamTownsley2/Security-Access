@@ -44,7 +44,7 @@
                 if (data.url) {
                     alert('Video shared sucesfully');
                     console.log(data.url);
-                    window.open(data.url, '_blank', 'noopener noreferrer');
+                    window.open(`/dashboard/video-player?s3=${encodeURIComponent(data.url)}`, '_blank', 'noopener noreferrer');
                 } else {
                     alert('Error sharing video');
                 }
