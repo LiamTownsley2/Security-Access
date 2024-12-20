@@ -1,5 +1,7 @@
 #!/usr/bin/env python
-from dotenv import load_dotenv
+import sys
+import os
+
 import curses
 import logging
 import threading
@@ -12,7 +14,8 @@ from api.index import get_api_status, toggle_api_status
 from classes.Camera import Camera
 from classes.RFID_Reader import RFID_Reader
 
-# load_dotenv()
+# Add app/ to Python Path.
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 thread_logger_file_name = "thread_reader.log"
 thread_logger = logging.getLogger("ThreadLogger")
