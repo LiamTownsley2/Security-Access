@@ -5,8 +5,8 @@ from enum import Enum
 sysfs_path = "/sys/kernel/led_toggle/led_toggle"
 
 class DoorState(Enum):
-    LOCKED = 0, # Light Off [LOW]
-    UNLOCKED = 1 # Light On [HIGH]
+    LOCKED = "0", # Light Off [LOW]
+    UNLOCKED = "1" # Light On [HIGH]
 
 class DoorController:
     def __init__(self):
