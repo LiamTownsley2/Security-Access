@@ -71,7 +71,7 @@ def hello_world():
 def set_lockout():
     data = request.get_json()
 
-    should_lockout = data.get("should_lockout") == "true"
+    should_lockout = str(data.get("should_lockout")).lower() == "true"
     door_controller.set_lockout(should_lockout)
     
     return jsonify({{"locked_out": str(should_lockout)}}), 200
