@@ -1,14 +1,15 @@
 #!/usr/bin/env python
 import curses
-import threading
+# import threading
+# import logging
 
 from main_menu.employee_management import card, user
 from util import curses as curses_util
-from util import general as general_util
+# from util import general as general_util
 from util import rfid as rfid_util
 from api.index import get_api_status, toggle_api_status
 from main_menu.employee_management.card import rfid_reader
-from classes.RFID_Reader import thread_logger_file_name
+# from classes.RFID_Reader import thread_logger_file_name
 
 def handle_user_interaction(stdscr, key, menu):
     for item in menu:
@@ -35,10 +36,10 @@ def main_menu(stdscr):
     curses.curs_set(0)
     stdscr.clear()
 
-    log_thread = threading.Thread(
-        target=general_util.watch_log_file, args=(thread_logger_file_name), daemon=False
-    )
-    log_thread.start()
+    # log_thread = threading.Thread(
+    #     target=general_util.watch_log_file, args=(thread_logger_file_name), daemon=False
+    # )
+    # log_thread.start()
 
     curses_util.register_colours()
 

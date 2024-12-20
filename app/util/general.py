@@ -17,7 +17,7 @@ def clean_text(text):
     filtered_text = re.sub(r"\W+", "", text)
     return filtered_text
 
-def watch_log_file(file_path, log_queue):
+def watch_log_file(file_path):
     with open(file_path, "r") as log_file:
         log_file.seek(0, 2)
         while True:
