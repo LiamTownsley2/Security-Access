@@ -6,7 +6,7 @@ import curses
 import logging
 import threading
 
-from main_menu.employee_management import card, user
+from .main_menu.employee_management import card, user
 import util.curses as curses_util
 import util.general as general_util
 import util.rfid as rfid_util
