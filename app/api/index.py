@@ -4,6 +4,8 @@ from flask import Flask, jsonify
 from .routes import accessLog, camera, card, user
 import os
 import multiprocessing
+from classes.RFID_Reader import door_controller
+import traceback
 
 os.environ["FLASK_RUN_FROM_CLI"] = "false"
 
@@ -65,3 +67,13 @@ def destroy_api():
 @app.route("/")
 def hello_world():
     return jsonify("Hello World"), 200
+
+@app.route("/lockout", methods=["POST"])
+def set_lockout():
+    try:
+        _, locked_out_state = door_controller.get_state()
+        door_controller.set_lockout(not locked_out_state)
+    
+        return jsonify({"locked_out": str(not locked_out_state)}), 200
+    except Exception as e:
+        return jsonify({"error": str(e), "stack": traceback.format_exc()}), 400

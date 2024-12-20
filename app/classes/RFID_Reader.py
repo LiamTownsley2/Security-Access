@@ -82,7 +82,7 @@ class RFID_Reader:
                     f"*{'VALID' if is_valid else 'INVALID'} TAG READ* | ID: {id} | Text: '{text}'"
                 )
 
-                if is_valid:
+                if is_valid and not door_controller.get_locked_out():
                     door_controller.unlock(3)
                     self.logger.info("Attempting upload to bucket.")
                     bucket, file_object = self.camera.record_and_upload(
