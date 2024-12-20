@@ -1,6 +1,7 @@
 boto3
+dotenv
+Flask
 picamera
 smbus2
 mfrc522
-Flask
 RPi.GPIO

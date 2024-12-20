@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import curses
 import threading
+from dotenv import load_dotenv
 
 from api.index import get_api_status, toggle_api_status
 from classes.RFID_Reader import thread_log_path
@@ -12,6 +13,7 @@ from util import curses as curses_util
 from util import general as general_util
 from util import rfid as rfid_util
 
+load_dotenv()
 
 def handle_user_interaction(stdscr, key, menu):
     try:
