@@ -7,12 +7,12 @@ import logging
 import threading
 
 from .main_menu.employee_management import card, user
-import util.curses as curses_util
-import util.general as general_util
-import util.rfid as rfid_util
-from api.index import get_api_status, toggle_api_status
-from classes.Camera import Camera
-from classes.RFID_Reader import RFID_Reader
+from .util import curses as curses_util
+from .util import general as general_util
+from .util import rfid as rfid_util
+from .api.index import get_api_status, toggle_api_status
+from .classes import Camera
+from .classes import RFID_Reader
 
 # Add app/ to Python Path.
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
