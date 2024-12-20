@@ -33,6 +33,6 @@ def _generate_page(stdscr):
                 stdscr.addstr(idx, 0, line.strip())
             stdscr.refresh()
             sleep(0.1)
-        except Exception as e:
+        except Exception:
             traceback.print_exc()
             sleep(10)
