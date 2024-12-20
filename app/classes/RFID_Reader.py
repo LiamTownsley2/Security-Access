@@ -62,8 +62,11 @@ class RFID_Reader:
         return
 
     def start_reading(self):
-        self.thread.start()
-        self.status = True
+        try:
+            self.thread.start()
+            self.status = True
+        except KeyboardInterrupt:
+            pass
         return True
 
     def stop_reading(self):

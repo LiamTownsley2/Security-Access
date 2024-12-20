@@ -44,10 +44,13 @@ def main_menu(stdscr):
     curses.curs_set(0)
     stdscr.clear()
 
-    log_thread = threading.Thread(
-        target=general_util.watch_log_file, args=(thread_log_path,), daemon=False
-    )
-    log_thread.start()
+    try:
+        log_thread = threading.Thread(
+            target=general_util.watch_log_file, args=(thread_log_path,), daemon=False
+        )
+        log_thread.start()
+    except KeyboardInterrupt:
+        pass
 
     curses_util.register_colours()
     while True:
@@ -75,5 +78,6 @@ def main_menu(stdscr):
         if not response:
             break
     curses.endwin()
+
 
 curses.wrapper(main_menu)

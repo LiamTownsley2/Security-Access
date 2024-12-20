@@ -41,8 +41,11 @@ api_status = False
 
 def initialize_api():
     global api_status
-    api_process.start()
-    api_status = True
+    try:
+        api_process.start()
+        api_status = True
+    except KeyboardInterrupt:
+        pass
 
 
 def toggle_api_status(stdscr):
