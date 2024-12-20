@@ -27,3 +27,8 @@ def get_videos_by_folder(directory_name):
     else:
         print("No files found.")
         return []
+
+def generate_share_url(bucket_name, object_key):
+    return s3.generate_presigned_url('get_object',
+        Params={'Bucket': bucket_name, 'Key': object_key},
+        ExpiresIn=3600)

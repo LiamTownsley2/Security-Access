@@ -1,6 +1,6 @@
 from flask import Blueprint, abort, jsonify, request
 
-from aws import db
+from aws import db, S3
 
 bp_access_log = Blueprint("log", __name__, url_prefix="/log")
 
@@ -35,5 +35,18 @@ def register_entry(user_id):
             abort(400, "Missing required TagID variable.")
         db.register_entry(data["TagID"], user_id)
         return jsonify("Success"), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 400
+
+@bp_access_log.route("/share", methods=["POST"])
+def share_video():
+    try:
+        data = request.get_json()
+
+        bucket_name = data.get("bucket_name")
+        file_object = data.get("file_object")
+        
+        url = S3.generate_share_url(bucket_name, file_object)
+        return jsonify({"url": url}), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 400
