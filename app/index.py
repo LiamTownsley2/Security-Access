@@ -58,7 +58,8 @@ def main_menu(stdscr):
 
         stdscr.addstr(12, 0, "Main Menu", curses.A_UNDERLINE)
         for idx, item in enumerate(menu_items, start=1):
-            stdscr.addstr(12 + idx, 0, f"{item[0]}. {item[1]} {"| SELECTED" if chr(last_key).lower() == item[0] else ""}", curses.color_pair(3))
+            _x = "| SELECTED" if chr(last_key).lower() == item[0] else ""
+            stdscr.addstr(12 + idx, 0, f"{item[0]}. {item[1]} {_x}", curses.color_pair(3))
 
         stdscr.addstr(21, 0, "Please select an option >> ")
         stdscr.addstr(22, 0, "")
