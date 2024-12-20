@@ -1,4 +1,4 @@
-KERNEL := /home/cmp408/rpisrc/linux
+KERNEL := /lib/modules/$(shell uname -r)/build
 PWD := $(shell pwd)
 CROSS := arm-linux-gnu-
 
