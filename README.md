@@ -77,7 +77,7 @@ Run the setup script
  - [Readme Generator - readme.so](https://readme.so/)
 ## License
 
-[MIT](https://choosealicense.com/licenses/mit/)
+[GNU Affero General Public License v3.0](./LICENSE)
 
 
 ## Authors
