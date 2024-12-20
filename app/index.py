@@ -44,7 +44,6 @@ def main_menu(stdscr):
     log_thread.start()
 
     curses_util.register_colours()
-    last_key = None
     while True:
         stdscr.clear()
 
@@ -62,13 +61,10 @@ def main_menu(stdscr):
 
         stdscr.addstr(21, 0, "Please select an option >> ")
         stdscr.addstr(22, 0, "")
-        # if last_key is not None:
-            # stdscr.addstr(23, 0, f"Selected ({type(chr(last_key))} | {type(last_key)}): {chr(last_key)} | {last_key}", curses.A_BOLD)
         
         stdscr.refresh()
 
         key = stdscr.getch()
-        last_key = key
         handle_user_interaction(stdscr, key, menu_items)
 
 
