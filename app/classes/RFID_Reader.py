@@ -49,6 +49,10 @@ class RFID_Reader:
         else:
             self.start_reading()
             thread_logger.log(logging.CRITICAL, "RFID READING STATUS STARTED")
+    
+    def start(self, stdscr):
+        self.start_reading()
+        stdscr.refresh()
 
     def start_reading(self):
         self.thread.start()

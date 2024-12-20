@@ -30,7 +30,7 @@ def main_menu(stdscr):
             "Revoke an Employees Access",
             user.remove_user,
         ],
-        ["4", "Toggle RFID Scanner", rfid_reader.start_reading],
+        ["4", "Toggle RFID Scanner", rfid_reader.start],
         ["5", "Toggle Web Interface", toggle_api_status],
         ["6", "View RFID Logs", rfid_util.view_rfid_logs],
         ["q", "Quit", exit],
