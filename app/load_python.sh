@@ -9,7 +9,7 @@ source venv/bin/activate
 # Check Requirements
 if [ -f "requirements.txt" ]; then
     echo "Installing Python Dependencies..."
-    pip3.8 install --upgrade --upgrade-strategy only-if-needed -r requirements.txt
+    pip install --upgrade --upgrade-strategy only-if-needed -r requirements.txt
     echo -e"SUCCESS\tPython dependancies installed successfully."
 else
     echo -e "ERROR\t'requirements.txt' file not found."
@@ -18,4 +18,4 @@ fi
 
 echo "Starting App..."
 # Start App
-sudo -E python3.8 index.py
+sudo -E python index.py
