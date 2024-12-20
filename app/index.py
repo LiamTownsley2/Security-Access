@@ -15,9 +15,9 @@ def handle_user_interaction(stdscr, key, menu):
     for item in menu:
         if key.lower() == item[0]:
             item[2](stdscr)
-            stdscr.addstr(23, 0, f"Selected: {item[1]}", curses.A_BOLD)
-            stdscr.refresh()
             return True
+    stdscr.addstr(23, 0, f"Selected ({type(key)}): {key}", curses.A_BOLD)
+    stdscr.refresh()
     return False
 
 
@@ -58,7 +58,7 @@ def main_menu(stdscr):
 
         stdscr.addstr(12, 0, "Main Menu", curses.A_UNDERLINE)
         for idx, item in enumerate(menu_items, start=1):
-            stdscr.addstr(12 + idx, 0, f"{idx}. {item[1]}", curses.color_pair(3))
+            stdscr.addstr(12 + idx, 0, f"{item[0]}. {item[1]}", curses.color_pair(3))
 
         stdscr.addstr(21, 0, "Please select an option >> ")
         stdscr.addstr(22, 0, "")
