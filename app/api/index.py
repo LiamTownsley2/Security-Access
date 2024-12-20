@@ -1,7 +1,7 @@
 import logging
 
 from flask import Flask, jsonify
-from .routes import accessLog, camera, card, user
+from .routes import accessLog, camera, card, user, dashboard
 import os
 import multiprocessing
 from classes.RFID_Reader import door_controller
@@ -27,6 +27,7 @@ app.register_blueprint(accessLog.bp_access_log)
 app.register_blueprint(camera.bp_cameras)
 app.register_blueprint(card.bp_cards)
 app.register_blueprint(user.bp_user)
+app.register_blueprint(dashboard.bp_dashboard)
 
 
 def run_app():
