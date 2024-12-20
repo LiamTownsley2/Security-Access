@@ -12,7 +12,7 @@ from api.index import get_api_status, toggle_api_status
 from classes.Camera import Camera
 from classes.RFID_Reader import RFID_Reader
 
-load_dotenv()
+# load_dotenv()
 
 thread_logger_file_name = "thread_reader.log"
 thread_logger = logging.getLogger("ThreadLogger")
