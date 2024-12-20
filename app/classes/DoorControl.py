@@ -25,7 +25,7 @@ class DoorController:
         with open(sysfs_path, "r") as file:
             state = file.read().strip()
             is_active = state == "1"
-        return [is_active, self.locked_out]
+        return is_active, self.locked_out
     def get_locked_out(self):
         return self.locked_out
     
@@ -45,10 +45,11 @@ class DoorController:
             self.lock()
 
     def toggle_lock(self):
-        if self.locked_out:
+        state, locked_out = self.get_state()
+        if locked_out:
             return False
-
-        if self.get_state() == DoorState.LOCKED:
+        
+        if state:
             self.unlock()
         else:
             self.lock()
