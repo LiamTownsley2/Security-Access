@@ -23,7 +23,7 @@ def _generate_page(stdscr):
         try:
             key = stdscr.getch()
             if key == ord("q"):
-                break
+                return
 
             while not log_queue.empty():
                 log_lines.append(log_queue.get())
