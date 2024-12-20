@@ -1,9 +1,7 @@
 import re
 import random
 import time
-from queue import Queue
-
-log_queue = Queue()
+from .rfid import log_queue
 
 def generate_unique_id():
     timestamp = int(time.time() * 1000)
