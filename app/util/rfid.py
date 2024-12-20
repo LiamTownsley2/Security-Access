@@ -33,4 +33,6 @@ def _generate_page(stdscr):
             stdscr.addstr(idx, 0, line.strip())
 
         stdscr.refresh()
-        sleep(0.1)
+        sleep(5)
+    sleep(10)
+    return
