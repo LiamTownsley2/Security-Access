@@ -1,20 +1,26 @@
-import sys
+import logging
 from mfrc522 import SimpleMFRC522
 import multiprocessing
 from aws import db
 import util.general as general_util
-from .DoorControl import DoorController
+from . import DoorControl, Camera
 
-sys.path.append("..")
+thread_logger_file_name = "thread_reader.log"
+thread_logger = logging.getLogger("ThreadLogger")
+thread_logger.setLevel(logging.INFO)
+thread_file_handler = logging.FileHandler(thread_logger_file_name)
+thread_file_handler.setFormatter(logging.Formatter("%(asctime)s - %(levelname)s - %(message)s"))
+thread_logger.addHandler(thread_file_handler)
 
-door_controller = DoorController()
+door_controller = DoorControl.DoorController()
 
 class RFID_Reader:
-    def __init__(self, logger, camera):
+    def __init__(self):
+        
         self.status = False
         self.reader = SimpleMFRC522()
-        self.logger = logger
-        self.camera = camera
+        self.logger = thread_logger
+        self.camera = Camera.Camera()
         self.thread = multiprocessing.Process(target=self.read_key, daemon=True)
 
     def get_status(self):

@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 import curses
-import logging
 import threading
 
 from main_menu.employee_management import card, user
@@ -8,20 +7,8 @@ from util import curses as curses_util
 from util import general as general_util
 from util import rfid as rfid_util
 from api.index import get_api_status, toggle_api_status
-from classes import Camera, RFID_Reader
-
-thread_logger_file_name = "thread_reader.log"
-thread_logger = logging.getLogger("ThreadLogger")
-thread_logger.setLevel(logging.INFO)
-thread_file_handler = logging.FileHandler(thread_logger_file_name)
-thread_file_handler.setFormatter(
-    logging.Formatter("%(asctime)s - %(levelname)s - %(message)s")
-)
-thread_logger.addHandler(thread_file_handler)
-
-camera = Camera()
-rfid_reader = RFID_Reader(thread_logger, camera)
-
+from main_menu.employee_management.card import rfid_reader
+from classes.RFID_Reader import thread_logger_file_name
 
 def handle_user_interaction(stdscr, key: str, menu):
     for item in menu:
