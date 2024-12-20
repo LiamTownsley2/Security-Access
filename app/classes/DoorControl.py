@@ -24,16 +24,19 @@ class DoorController:
     def get_state(self):
         with open(sysfs_path, "r") as file:
             state = file.read().strip()
-        return [state, self.locked_out]
+            is_active = state == "1"
+        return [is_active, self.locked_out]
 
     def lock(self):
         if self.locked_out:
             return False
+        
         self._write_state(DoorState.LOCKED)
 
     def unlock(self, seconds: int):
         if self.locked_out:
             return False
+        
         self._write_state(DoorState.UNLOCKED)
         if seconds:
             sleep(seconds)
@@ -47,6 +50,9 @@ class DoorController:
             self.unlock()
         else:
             self.lock()
+
+    def set_lockout(self, shouldLockout: bool):
+        self.locked_out = shouldLockout
 
     def _write_state(self, state: DoorState):
         thread_logger.info(f"Attempting to write state {str(state.value)}")

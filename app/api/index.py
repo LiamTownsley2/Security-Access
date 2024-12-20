@@ -1,6 +1,6 @@
 import logging
 
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify
 from .routes import accessLog, camera, card, user
 import os
 import multiprocessing
@@ -71,11 +71,9 @@ def hello_world():
 @app.route("/lockout", methods=["POST"])
 def set_lockout():
     try:
-        data = request.get_json()
-
-        should_lockout = str(data.get("should_lockout")).lower() == "true"
-        door_controller.set_lockout(should_lockout)
+        state = door_controller.get_state()
+        door_controller.set_lockout(not state)
     
-        return jsonify({{"locked_out": str(should_lockout)}}), 200
+        return jsonify({{"locked_out": str(not state)}}), 200
     except Exception as e:
         return jsonify({"error": e, "stack": traceback.format_exc()}), 400
