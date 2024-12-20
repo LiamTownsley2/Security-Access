@@ -39,7 +39,7 @@ def main_menu(stdscr):
     stdscr.clear()
 
     log_thread = threading.Thread(
-        target=general_util.watch_log_file, args=(thread_log_path), daemon=False
+        target=general_util.watch_log_file, args=(thread_log_path,), daemon=False
     )
     log_thread.start()
 
