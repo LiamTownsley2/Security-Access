@@ -20,8 +20,8 @@ def _generate_page(stdscr):
     log_lines = []
     while True:
         try:
-            key = stdscr.getkey()
-            if key == "q":
+            key = stdscr.getch()
+            if key == ord("q"):
                 break
 
             while not log_queue.empty():
