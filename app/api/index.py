@@ -5,6 +5,7 @@ from .routes import accessLog, camera, card, user
 import os
 import multiprocessing
 from classes.RFID_Reader import door_controller
+import traceback
 
 os.environ["FLASK_RUN_FROM_CLI"] = "false"
 
@@ -69,9 +70,12 @@ def hello_world():
 
 @app.route("/lockout", methods=["POST"])
 def set_lockout():
-    data = request.get_json()
+    try:
+        data = request.get_json()
 
-    should_lockout = str(data.get("should_lockout")).lower() == "true"
-    door_controller.set_lockout(should_lockout)
+        should_lockout = str(data.get("should_lockout")).lower() == "true"
+        door_controller.set_lockout(should_lockout)
     
-    return jsonify({{"locked_out": str(should_lockout)}}), 200
+        return jsonify({{"locked_out": str(should_lockout)}}), 200
+    except Exception as e:
+        return jsonify({"error": e, "stack": traceback.format_exc()}), 400
