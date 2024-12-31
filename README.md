@@ -8,6 +8,8 @@
 [![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/LiamTownsley2/Security-Access/codeql.yml?label=codeql)](https://github.com/LiamTownsley2/Security-Access/actions/workflows/codeql.yml)
 [![GitHub License](https://img.shields.io/github/license/LiamTownsley2/Security-Access?cacheSeconds=120)](./LICENSE)
 
+[API Documentation - Postman](https://cmp315.postman.co/workspace/New-Team-Workspace~ef0c1772-3d09-4444-98f4-23cfd4ed276a/collection/17093352-3ed4eabc-e8e3-4db1-9764-f164260748e8?action=share&creator=17093352)
+
 This project is designed for the Raspberry Pi Zero W, operating on Linux Kernel 5.10.103+. The core functionality of this project involves using an RFID (Radio Frequency Identification) scanner to read RFID tags, which could be used for access control or identity verification. The project takes advantage of the capabilities of Amazon Web Services (AWS) to extend the functionality of the local device to the cloud.
 
 This project also includes an API that is accessible via port `5000`. Additionally, the API provides a dashboard, which can be accessed at `http://your_ip:5000/dashboard`.
@@ -57,35 +59,27 @@ To run this project, you will need to add the following Environment Variables to
 Clone the project
 
 ```bash
-  git clone https://github.com/LiamTownsley2/CMP408-Internet-of-Things.git
+git clone https://github.com/LiamTownsley2/CMP408-Internet-of-Things.git
 ```
 
 Go to the project directory
 
 ```bash
-  cd CMP408-Internet-of-Things
+cd CMP408-Internet-of-Things
 ```
 
 Run the setup script
 ```bash
-  sudo -E ./startup.sh
+sudo -E ./startup.sh
 ```
 
-
-## API Documentation
-
-[API Documentation - Postman](https://cmp315.postman.co/workspace/New-Team-Workspace~ef0c1772-3d09-4444-98f4-23cfd4ed276a/collection/17093352-3ed4eabc-e8e3-4db1-9764-f164260748e8?action=share&creator=17093352)
-
-
-## Acknowledgements
-
- - [Readme Generator - readme.so](https://readme.so/)
 ## License
-
 [GNU Affero General Public License v3.0](./LICENSE)
 
 
-## Authors
-
+## Author
 - [Liam Townsley (@LiamTownsley2)](https://www.github.com/LiamTownsley2)
+
+## Acknowledgements
+ - [Readme Generator - readme.so](https://readme.so/)
 
