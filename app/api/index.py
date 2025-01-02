@@ -84,7 +84,7 @@ def destroy_api():
 
 @app.route("/")
 def hello_world():
-    return jsonify("Hello World"), 200
+    return jsonify({ "msg": "Hello World" }), 200
 
 
 @app.route("/lockout", methods=["POST"])
