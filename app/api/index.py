@@ -1,9 +1,10 @@
 import logging
 import multiprocessing
 import os
+import secrets
 
 from classes.RFID_Reader import door_controller
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 
 from .routes import accessLog, camera, card, dashboard, user
 
@@ -37,7 +38,20 @@ def run_app():
 api_process = multiprocessing.Process(target=run_app, daemon=False)
 api_status = False
 
+def generate_access_token():
+    token = secrets.token_hex(32)
+    with open("access_token.txt", "w") as file:
+        file.write(token)
+    return token
 
+access_token = generate_access_token()
+
+@app.before_request
+def verify_access_token():
+    token = request.headers.get("Authorization")
+    if token != access_token:
+        return jsonify({"error": "Unauthorized"}), 401
+    
 def initialize_api():
     global api_status
     try:
