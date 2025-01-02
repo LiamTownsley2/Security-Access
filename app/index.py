@@ -1,9 +1,11 @@
 #!/usr/bin/env python
 import curses
 import threading
+import pyperclip
+
 from dotenv import load_dotenv
 
-from api.index import get_api_status, toggle_api_status
+from api.index import get_api_status, toggle_api_status, access_token
 from classes.RFID_Reader import thread_log_path
 
 # import logging
@@ -30,6 +32,9 @@ def handle_user_interaction(stdscr, key, menu):
         pass
 
 
+def copy_access_token(stdscr):
+    pyperclip.copy(access_token)
+
 def main_menu(stdscr):
     menu_items = [
         ["1", "Register an Employee", user.add_user],
@@ -41,7 +46,8 @@ def main_menu(stdscr):
         ],
         ["4", "Toggle RFID Scanner", rfid_reader.start],
         ["5", "Toggle Web Interface", toggle_api_status],
-        ["6", "View RFID Logs", rfid_util.view_rfid_logs],
+        ["6", "Copy API Access Token to Clipboard", copy_access_token]
+        ["7", "View RFID Logs", rfid_util.view_rfid_logs],
         ["q", "Quit", curses.endwin],
     ]
     curses.curs_set(0)

@@ -64,10 +64,6 @@ def interface_status(stdscr, starting_row: int, rfid_status: bool, api_status: b
         curses.color_pair(1) | curses.A_BOLD,
     )
     is_operational_curses(stdscr, 10, 15, api_status)
-    if access_token:
-        stdscr.addstr(11, 8, "API Token:" + general_util.repeat(" ", 25), curses.color_pair(1) | curses.A_BOLD)
-        stdscr.addstr(11, 15, access_token, curses.color_pair(2))
-
 
 def send_simple(stdscr, message: str, timeout: int, row=0):
     stdscr.clear()
