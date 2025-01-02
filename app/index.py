@@ -33,7 +33,9 @@ def handle_user_interaction(stdscr, key, menu):
 
 
 def copy_access_token(stdscr):
-    pyperclip.copy(access_token)
+    if access_token:
+        pyperclip.copy(access_token)
+    return
 
 def main_menu(stdscr):
     menu_items = [
