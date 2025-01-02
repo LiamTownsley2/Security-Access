@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 import curses
 import threading
-import pyperclip
 
 from dotenv import load_dotenv
 
@@ -31,16 +30,6 @@ def handle_user_interaction(stdscr, key, menu):
     except Exception:
         pass
 
-
-def copy_access_token(stdscr):
-    with open("access_token.txt", "r") as file:
-        token = file.read()
-        if token:
-            pyperclip.copy(token)
-    
-    stdscr.refresh()
-    return
-
 def main_menu(stdscr):
     menu_items = [
         ["1", "Register an Employee", user.add_user],
@@ -52,7 +41,6 @@ def main_menu(stdscr):
         ],
         ["4", "Toggle RFID Scanner", rfid_reader.start],
         ["5", "Toggle Web Interface", toggle_api_status],
-        ["6", "Copy API Access Token to Clipboard", copy_access_token],
         ["7", "View RFID Logs", rfid_util.view_rfid_logs],
         ["q", "Quit", curses.endwin],
     ]
