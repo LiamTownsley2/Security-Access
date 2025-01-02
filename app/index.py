@@ -5,7 +5,7 @@ import pyperclip
 
 from dotenv import load_dotenv
 
-from api.index import get_api_status, toggle_api_status, access_token
+from api.index import get_api_status, toggle_api_status
 from classes.RFID_Reader import thread_log_path
 
 # import logging
