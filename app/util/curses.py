@@ -1,7 +1,6 @@
 import curses
 
 import util.general as general_util
-from api.index import access_token
 
 def ask_question(stdscr, question: str):
     stdscr.clear()
