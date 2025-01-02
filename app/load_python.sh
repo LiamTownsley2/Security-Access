@@ -10,7 +10,7 @@ source venv/bin/activate
 if [ -f "requirements.txt" ]; then
     echo "Installing Python Dependencies..."
     pip install --upgrade --upgrade-strategy only-if-needed -r requirements.txt
-    echo -e"SUCCESS\tPython dependancies installed successfully."
+    echo -e "SUCCESS\tPython dependancies installed successfully."
 else
     echo -e "ERROR\t'requirements.txt' file not found."
     exit 1

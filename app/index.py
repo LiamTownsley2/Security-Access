@@ -33,11 +33,12 @@ def handle_user_interaction(stdscr, key, menu):
 
 
 def copy_access_token(stdscr):
-    stdscr.refresh()
     with open("access_token.txt", "r") as file:
         token = file.read()
         if token:
             pyperclip.copy(token)
+    
+    stdscr.refresh()
     return
 
 def main_menu(stdscr):
