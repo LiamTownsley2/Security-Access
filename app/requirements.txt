@@ -6,3 +6,4 @@ smbus2
 mfrc522
 RPi.GPIO
 pyperclip
+xclip
